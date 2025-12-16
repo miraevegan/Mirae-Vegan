@@ -1,0 +1,20 @@
+export type Address = {
+  _id: string;
+  fullName: string;
+  phone: string;
+  street: string;
+  landmark?: string;
+  city: string;
+  state: string;
+  pincode: string;
+  isDefault: boolean;
+};
+
+export type User = {
+  _id: string;
+  name: string;
+  email: string;
+  role: "user" | "admin";
+  phone?: string;
+  addresses: Address[];
+};
