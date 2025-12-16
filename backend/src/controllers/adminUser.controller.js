@@ -2,23 +2,41 @@ import User from "../models/User.js";
 import Order from "../models/Order.js";
 import mongoose from "mongoose";
 
-// Get all users with total amount spent + search + sort
+/* ===============================
+   GET ALL USERS (Admin)
+   - Search
+   - Sort
+   - Orders count
+   - Total spent
+================================ */
 export const getAllUsers = async (req, res) => {
   try {
-    const { search, sortBy } = req.query;
+    const { search = "", sortBy = "recent" } = req.query;
 
-    // Build search query
-    let searchQuery = {};
-    if (search) {
-      const regex = new RegExp(search, "i");
-      searchQuery = {
-        $or: [{ name: regex }, { email: regex }, { phone: regex }],
-      };
+    /* ---------- SEARCH ---------- */
+    const matchStage = search
+      ? {
+          $or: [
+            { name: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } },
+            { phone: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    /* ---------- SORT ---------- */
+    let sortStage = { createdAt: -1 }; // default: recent
+
+    if (sortBy === "highest-spender") {
+      sortStage = { totalSpent: -1 };
+    } else if (sortBy === "lowest-spender") {
+      sortStage = { totalSpent: 1 };
     }
 
-    // Aggregate users with total spent
+    /* ---------- AGGREGATION ---------- */
     const users = await User.aggregate([
-      { $match: searchQuery },
+      { $match: matchStage },
+
       {
         $lookup: {
           from: "orders",
@@ -27,24 +45,28 @@ export const getAllUsers = async (req, res) => {
           as: "orders",
         },
       },
+
       {
         $addFields: {
-          totalSpent: { $sum: "$orders.totalPrice" },
           ordersCount: { $size: "$orders" },
+          totalSpent: {
+            $ifNull: [{ $sum: "$orders.totalPrice" }, 0],
+          },
         },
       },
+
       {
         $project: {
-          password: 0, // hide password
-          orders: 0, // hide orders array to reduce payload
+          password: 0,
+          orders: 0,
+          emailVerificationOTP: 0,
+          emailVerificationExpires: 0,
+          resetPasswordOTP: 0,
+          resetPasswordExpires: 0,
         },
       },
-      // Sorting based on query param
-      ...(sortBy === "highest-spender"
-        ? [{ $sort: { totalSpent: -1 } }]
-        : sortBy === "lowest-spender"
-        ? [{ $sort: { totalSpent: 1 } }]
-        : [{ $sort: { createdAt: -1 } }]), // default recent users
+
+      { $sort: sortStage },
     ]);
 
     res.json({
@@ -53,25 +75,37 @@ export const getAllUsers = async (req, res) => {
       users,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("GET USERS ERROR:", error);
+    res.status(500).json({ message: "Failed to fetch users" });
   }
 };
 
-// Get detailed info + orders of a specific user by id
+/* ===============================
+   GET USER DETAILS (Admin)
+   - User info
+   - Orders list
+================================ */
 export const getUserDetails = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(userId))
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid user ID" });
+    }
 
-    const user = await User.findById(userId).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
+    const user = await User.findById(id).select(
+      "-password -emailVerificationOTP -emailVerificationExpires -resetPasswordOTP -resetPasswordExpires"
+    );
 
-    // Fetch user's orders, sorted newest first
-    const orders = await Order.find({ user: userId })
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const orders = await Order.find({ user: id })
       .sort({ createdAt: -1 })
-      .select("orderItems totalPrice isPaid isDelivered createdAt");
+      .select(
+        "orderItems totalPrice paymentStatus orderStatus isPaid isDelivered createdAt"
+      );
 
     res.json({
       success: true,
@@ -79,6 +113,7 @@ export const getUserDetails = async (req, res) => {
       orders,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("GET USER DETAILS ERROR:", error);
+    res.status(500).json({ message: "Failed to fetch user details" });
   }
 };
