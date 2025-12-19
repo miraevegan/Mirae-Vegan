@@ -1,7 +1,15 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import api from "@/lib/axios"; // Your axios instance
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
+import api from "@/lib/axios";
+import { useAuth } from "@/context/AuthContext";
 
 export type CartItem = {
   productId: string;
@@ -24,34 +32,40 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
+    if (!user) return;
     setLoading(true);
     try {
       const res = await api.get("/cart");
       setCart(res.data.cart || []);
-    } catch (error) {
-      console.error("Failed to fetch cart", error);
+    } catch {
+      setCart([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
-  const addToCart = async (productId: string, quantity = 1) => {
-    setLoading(true);
-    try {
-      const res = await api.post("/cart", { productId, quantity });
-      setCart(res.data.cart);
-    } catch (error) {
-      console.error("Failed to add to cart", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const addToCart = useCallback(
+    async (productId: string, quantity = 1) => {
+      if (!user) throw new Error("User not authenticated");
+      setLoading(true);
+      try {
+        const res = await api.post("/cart", { productId, quantity });
+        setCart(res.data.cart);
+      } catch (error) {
+        console.error("Failed to add to cart", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user]
+  );
 
-  const updateQuantity = async (productId: string, quantity: number) => {
+  const updateQuantity = useCallback(async (productId: string, quantity: number) => {
     setLoading(true);
     try {
       const res = await api.put(`/cart/${productId}`, { quantity });
@@ -61,9 +75,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const removeFromCart = async (productId: string) => {
+  const removeFromCart = useCallback(async (productId: string) => {
     setLoading(true);
     try {
       const res = await api.delete(`/cart/${productId}`);
@@ -73,27 +87,50 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const clearCart = async () => {
-    setLoading(true);
-    try {
-      await api.delete("/cart");
-      setCart([]);
-    } catch (error) {
-      console.error("Failed to clear cart", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCart();
   }, []);
+
+  const clearCart = useCallback(async () => {
+    setCart([]);
+    if (!user) return;
+    await api.delete("/cart");
+  }, [user]);
+
+  // Fetch cart on login/logout
+  useEffect(() => {
+    if (user) {
+      fetchCart();
+    } else {
+      setCart([]);
+    }
+  }, [fetchCart, user]);
+
+  // Restore pending cart item after login
+  useEffect(() => {
+    if (!user) return;
+
+    const pending = localStorage.getItem("pendingCartItem");
+    if (!pending) return;
+
+    try {
+      const { productId, quantity } = JSON.parse(pending);
+      addToCart(productId, quantity);
+      localStorage.removeItem("pendingCartItem");
+    } catch (err) {
+      console.error("Failed to restore pending cart item", err);
+    }
+  }, [addToCart, user]);
 
   return (
     <CartContext.Provider
-      value={{ cart, loading, addToCart, updateQuantity, removeFromCart, clearCart, fetchCart }}
+      value={{
+        cart,
+        loading,
+        addToCart,
+        updateQuantity,
+        removeFromCart,
+        clearCart,
+        fetchCart,
+      }}
     >
       {children}
     </CartContext.Provider>

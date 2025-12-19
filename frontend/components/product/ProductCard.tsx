@@ -10,7 +10,7 @@ type ProductImage = {
 };
 
 type Product = {
-  id: string | number;
+  _id: string;
   name: string;
   price: number;
   images?: ProductImage[];
@@ -46,7 +46,7 @@ export default function ProductCard({
 
   return (
     <Link
-      href={`/products/${product.slug || product.id}`}
+      href={`/products/${product.slug || product._id}`}
       className="block w-full group"
       aria-label={`View details for ${product.name}`}
     >

@@ -7,6 +7,50 @@ import {
   Package,
   RefreshCcw,
 } from "lucide-react";
+import { motion, type Variants } from "framer-motion";
+
+/* ---------------------------
+   Motion variants
+---------------------------- */
+
+const easeOut = [0.16, 1, 0.3, 1] as const;
+
+const sectionFade: Variants = {
+  hidden: { opacity: 0, y: 32 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 1,
+      ease: easeOut,
+    },
+  },
+};
+
+const gridContainer: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const gridItem: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: easeOut,
+    },
+  },
+};
+
+/* ---------------------------
+   Data
+---------------------------- */
 
 const FEATURES = [
   {
@@ -33,17 +77,31 @@ const FEATURES = [
 
 export default function FeaturesSection() {
   return (
-    <section className="px-10 py-20 mx-auto">
-      <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+    <motion.section
+      className="px-6 py-16 mx-auto sm:px-10 sm:py-20"
+      variants={sectionFade}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-120px" }}
+    >
+      <motion.div
+        className="grid grid-cols-1 gap-10 text-center sm:grid-cols-2 lg:grid-cols-4 sm:text-left"
+        variants={gridContainer}
+      >
         {FEATURES.map((feature) => (
-          <FeatureItem
+          <motion.div
             key={feature.title}
-            icon={feature.icon}
-            title={feature.title}
-            subtitle={feature.subtitle}
-          />
+            variants={gridItem}
+            className="flex justify-center sm:block"
+          >
+            <FeatureItem
+              icon={feature.icon}
+              title={feature.title}
+              subtitle={feature.subtitle}
+            />
+          </motion.div>
         ))}
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }

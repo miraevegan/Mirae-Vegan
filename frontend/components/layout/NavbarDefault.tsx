@@ -41,7 +41,7 @@ export default function NavbarDefault() {
           <div className="flex items-center gap-6 text-xs tracking-widest uppercase">
             <Link className="hover:opacity-60" href="#just-landed">Just Landed</Link>
             <Link className="hover:opacity-60" href="/products">Shop</Link>
-            <Link className="hover:opacity-60" href="#">About Us</Link>
+            <Link className="hover:opacity-60" href="/about-us">About Us</Link>
           </div>
 
           {/* BRAND */}

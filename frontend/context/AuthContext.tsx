@@ -57,6 +57,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(true);
       await authService.login({ email, password });
       await fetchProfile();
+
       showToast("Logged in successfully 🎉", "success");
     } catch (err: unknown) {
       let message = "Login failed";
