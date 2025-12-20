@@ -4,10 +4,18 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import { Search, Heart, User, ShoppingBag, LogOut } from "lucide-react";
+import {
+  Search,
+  Heart,
+  User,
+  ShoppingBag,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import CartDrawer from "@/components/cart/CartDrawer"; // adjust path if needed
+import CartDrawer from "@/components/cart/CartDrawer";
 
 export default function NavbarDefault() {
   const { user, loading, logout } = useAuth();
@@ -16,11 +24,13 @@ export default function NavbarDefault() {
 
   const [open, setOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
+  /* Close profile dropdown */
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -37,14 +47,23 @@ export default function NavbarDefault() {
       <nav className="sticky top-0 z-50 w-full border-b bg-background border-border">
         <div className="relative flex items-center justify-between px-6 py-5 mx-auto max-w-11/12 text-text-primary">
 
-          {/* LEFT LINKS */}
-          <div className="flex items-center gap-6 text-xs tracking-widest uppercase">
+          {/* LEFT LINKS – Desktop Only */}
+          <div className="hidden lg:flex items-center gap-6 text-xs tracking-widest uppercase">
             <Link className="hover:opacity-60" href="#just-landed">Just Landed</Link>
             <Link className="hover:opacity-60" href="/products">Shop</Link>
             <Link className="hover:opacity-60" href="/about-us">About Us</Link>
           </div>
 
-          {/* BRAND */}
+          {/* MOBILE MENU BUTTON */}
+          <button
+            className="lg:hidden"
+            onClick={() => setMobileMenu(true)}
+            aria-label="Open menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+
+          {/* BRAND – unchanged */}
           <Link
             href="/"
             className="absolute text-3xl font-medium tracking-tight -translate-x-1/2 left-1/2 font-brand"
@@ -55,38 +74,29 @@ export default function NavbarDefault() {
           {/* RIGHT ICONS */}
           <div className="relative flex items-center gap-6">
 
-            <Search className="w-4.5 h-4.5 cursor-pointer hover:opacity-60" />
+            {/* <Search className="w-4.5 h-4.5 cursor-pointer hover:opacity-60" /> */}
             <Heart className="w-4.5 h-4.5 cursor-pointer hover:opacity-60" />
 
-            {/* CART ICON */}
+            {/* CART */}
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative"
               aria-label="Open cart"
             >
               <ShoppingBag className="w-4.5 h-4.5 hover:opacity-60" />
-
               {totalItems > 0 && (
-                <span className="
-                  absolute -top-2 -right-2
-                  min-w-4.5 h-4.5
-                  px-1
-                  flex items-center justify-center
-                  text-[10px] font-semibold
-                  bg-black text-white
-                  rounded-full
-                ">
+                <span className="absolute -top-2 -right-2 min-w-4.5 h-4.5 px-1 text-[10px] flex items-center justify-center bg-black text-white rounded-full">
                   {totalItems}
                 </span>
               )}
             </button>
 
             {/* PROFILE */}
-            <button onClick={() => setOpen((v) => !v)}>
+            <button onClick={() => setOpen(v => !v)}>
               <User className="w-4.5 h-4.5 hover:opacity-60" />
             </button>
 
-            {/* DROPDOWN */}
+            {/* PROFILE DROPDOWN */}
             {!loading && open && (
               <div
                 ref={dropdownRef}
@@ -116,24 +126,13 @@ export default function NavbarDefault() {
                   </>
                 ) : (
                   <>
-                    <Link
-                      href="/profile"
-                      onClick={() => setOpen(false)}
-                      className="block px-4 py-2 text-sm hover:bg-surface"
-                    >
+                    <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-surface">
                       Profile
                     </Link>
-
-                    <Link
-                      href="/orders"
-                      onClick={() => setOpen(false)}
-                      className="block px-4 py-2 text-sm hover:bg-surface"
-                    >
+                    <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-surface">
                       Orders
                     </Link>
-
                     <div className="h-px my-2 bg-border" />
-
                     <button
                       onClick={() => {
                         logout();
@@ -151,6 +150,24 @@ export default function NavbarDefault() {
             )}
           </div>
         </div>
+
+        {/* MOBILE NAV MENU */}
+        {mobileMenu && (
+          <div className="fixed inset-0 z-50 bg-background text-text-primary">
+            <div className="flex items-center justify-between p-6 border-b border-border">
+              <span className="text-2xl font-brand">Miraé</span>
+              <button onClick={() => setMobileMenu(false)}>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex flex-col items-center gap-8 mt-20 text-sm tracking-widest uppercase">
+              <Link href="#just-landed" onClick={() => setMobileMenu(false)}>Just Landed</Link>
+              <Link href="/products" onClick={() => setMobileMenu(false)}>Shop</Link>
+              <Link href="/about-us" onClick={() => setMobileMenu(false)}>About Us</Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* CART DRAWER */}

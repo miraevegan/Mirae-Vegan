@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer className="relative px-6 sm:px-10 pt-16 pb-8 bg-brand-primary">
       <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
-        
+
         {/* Main Menu */}
         <div className="text-center md:text-left">
           <h4 className="mb-4 text-sm font-semibold tracking-widest uppercase text-background">
@@ -29,7 +29,10 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-sm text-background">
             <li><Link href="/privacy-policy">Privacy Policy</Link></li>
-            <li><Link href="/licensing">Licensing</Link></li>
+            <li><Link href="/shipping-policy">Shipping Policy</Link></li>
+            <li><Link href="/cancellation-refund">Refund Policy</Link></li>
+            <li><Link href="/terms-and-conditions">Terms & Conditions</Link></li>
+
           </ul>
         </div>
 
@@ -39,7 +42,7 @@ export default function Footer() {
             Reach Us
           </h4>
           <ul className="space-y-2 text-sm text-background">
-            <li><Link href="/contact">Contact Us</Link></li>
+            <li><Link href="/contact-us">Contact Us</Link></li>
             <li><Link href="https://wa.me/XXXXXXXXXX">WhatsApp</Link></li>
             <li><Link href="#">Facebook</Link></li>
             <li><Link href="#">Instagram</Link></li>

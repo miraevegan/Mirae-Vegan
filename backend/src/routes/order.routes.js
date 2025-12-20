@@ -6,6 +6,7 @@ import {
   getAllOrders,
   markOrderPaid,
   updateOrderStatus,
+  createOrderFromCart,
 } from "../controllers/order.controller.js";
 
 import { protect } from "../middleware/auth.middleware.js";
@@ -17,6 +18,7 @@ const router = express.Router();
 router.post("/", protect, createOrder);
 router.get("/my", protect, getMyOrders);
 router.get("/:id", protect, getOrderById);
+router.post("/from-cart", protect, createOrderFromCart);
 
 // Admin
 router.get("/", protect, adminOnly, getAllOrders);

@@ -127,8 +127,8 @@ export default function Navbar() {
                   </>
                 ) : (
                   <>
-                    <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-surface">Profile</Link>
-                    <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-surface">Orders</Link>
+                    <Link href="/profile" className="block px-4 py-2 text-sm text-brand-primary hover:bg-surface">Profile</Link>
+                    <Link href="/orders" className="block px-4 py-2 text-sm text-brand-primary hover:bg-surface">Orders</Link>
                     <button
                       onClick={() => {
                         logout();

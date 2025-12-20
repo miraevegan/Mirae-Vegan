@@ -90,7 +90,7 @@ export default function ShopBanner({
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
         <motion.h2
-          className="mb-6 text-6xl tracking-wide text-background font-highlight"
+          className="mb-6 text-4xl md:text-6xl tracking-wide text-background font-highlight"
           variants={fadeUp}
         >
           {title}

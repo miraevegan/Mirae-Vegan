@@ -20,6 +20,7 @@ import couponRoutes from "./src/routes/coupon.routes.js";
 import wishlistRoutes from "./src/routes/wishlist.routes.js";
 import cartRoutes from "./src/routes/cart.routes.js";
 import adminUserRoutes from "./src/routes/adminUser.routes.js";
+import paymentRoutes from "./src/routes/payment.routes.js";
 // import testRoutes from "./src/routes/test.routes.js";
 
 // Register routes
@@ -31,6 +32,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // Test route
 // app.use("/api/test", testRoutes);

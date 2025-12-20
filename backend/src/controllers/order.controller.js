@@ -66,6 +66,46 @@ export const createOrder = async (req, res) => {
   }
 };
 
+// POST /orders/from-cart
+export const createOrderFromCart = async (req, res) => {
+  const user = await User.findById(req.user._id).populate("cart.productId");
+
+  if (!user.cart || user.cart.length === 0) {
+    return res.status(400).json({ message: "Cart is empty" });
+  }
+
+  const orderItems = user.cart.map(item => ({
+    product: item.productId._id,
+    name: item.productId.name,
+    price: item.productId.price,
+    quantity: item.quantity,
+    image: item.productId.images?.[0]?.url || "",
+  }));
+
+  const itemsPrice = orderItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
+  const taxPrice = 0;
+  const shippingPrice = 0;
+  const totalPrice = itemsPrice + taxPrice + shippingPrice;
+
+  const order = await Order.create({
+    user: user._id,
+    orderItems,
+    shippingAddress: req.body.shippingAddress,
+    paymentMethod: "RAZORPAY",
+    itemsPrice,
+    taxPrice,
+    shippingPrice,
+    totalPrice,
+    paymentStatus: "pending",
+    orderStatus: "pending",
+  });
+
+  res.status(201).json({ success: true, order });
+};
 
 /**
  * USER: Get My Orders
