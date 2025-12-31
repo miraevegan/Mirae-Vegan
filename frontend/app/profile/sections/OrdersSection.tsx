@@ -193,7 +193,6 @@ export default function OrdersSection({ orders, loading }: OrdersSectionProps) {
                       >
                         Invoice
                       </button>
-
                     </div>
                   </motion.div>
                 )}

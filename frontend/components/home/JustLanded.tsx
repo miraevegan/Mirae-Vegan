@@ -4,42 +4,12 @@ import React, { useState, useMemo } from "react";
 import ProductCard from "@/components/product/ProductCard";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, MoveRight } from "lucide-react";
-import { useToast } from "@/context/ToastContext";
-import { useCart } from "@/context/CartContext";
-import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
+// import { useToast } from "@/context/ToastContext";
+// import { useCart } from "@/context/CartContext";
+// import { useAuth } from "@/context/AuthContext";
+// import { useRouter } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
-
-type ProductImage = {
-  url: string;
-  public_id?: string;
-};
-
-type Variant = {
-  _id: string;
-  name?: string;
-  price: number;
-  stock: number;
-  sku?: string;
-};
-
-type Discount = {
-  percentage: number;
-  discountedPrice: number;
-};
-
-type Product = {
-  _id: string;
-  name: string;
-  price: number;
-  discountedPrice: number;
-  images?: ProductImage[];
-  slug?: string;
-  isJustLanded?: boolean;
-  isBestSeller?: boolean;
-  variants?: Variant[];
-  discount: Discount;
-};
+import type { Product } from "@/types/product";
 
 type JustLandedProps = {
   products: Product[];
@@ -85,10 +55,10 @@ const productItem: Variants = {
 
 export default function JustLanded({ products }: JustLandedProps) {
   const [page, setPage] = useState(0);
-  const { showToast } = useToast();
-  const { addToCart } = useCart();
-  const { user } = useAuth();
-  const router = useRouter();
+  // const { showToast } = useToast();
+  // const { addToCart } = useCart();
+  // const { user } = useAuth();
+  // const router = useRouter();
 
   const itemsPerView = useMemo(() => {
     if (typeof window === "undefined") return 3;
@@ -103,24 +73,24 @@ export default function JustLanded({ products }: JustLandedProps) {
   const next = () => page < maxPage && setPage((p) => p + 1);
   const prev = () => page > 0 && setPage((p) => p - 1);
 
-  const handleAddToCart = async (product: Product) => {
-    if (!user) {
-      localStorage.setItem(
-        "pendingCartItem",
-        JSON.stringify({ productId: product._id, quantity: 1 })
-      );
-      showToast("Please login to continue", "info");
-      router.push("/login");
-      return;
-    }
+  // const handleAddToCart = async (product: Product) => {
+  //   if (!user) {
+  //     localStorage.setItem(
+  //       "pendingCartItem",
+  //       JSON.stringify({ productId: product._id, quantity: 1 })
+  //     );
+  //     showToast("Please login to continue", "info");
+  //     router.push("/login");
+  //     return;
+  //   }
 
-    try {
-      await addToCart(product._id, 1);
-      showToast(`${product.name} added to cart`, "success");
-    } catch {
-      showToast("Failed to add item to cart", "error");
-    }
-  };
+  //   try {
+  //     await addToCart(product._id, 1);
+  //     showToast(`${product.name} added to cart`, "success");
+  //   } catch {
+  //     showToast("Failed to add item to cart", "error");
+  //   }
+  // };
 
   return (
     <motion.section
@@ -166,7 +136,7 @@ export default function JustLanded({ products }: JustLandedProps) {
               >
                 <ProductCard
                   product={product}
-                  onAddToCart={() => handleAddToCart(product)}
+                  // onAddToCart={() => handleAddToCart(product)}
                 />
               </motion.div>
             ))}

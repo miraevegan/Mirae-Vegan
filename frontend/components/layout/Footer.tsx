@@ -2,7 +2,7 @@
 
 import { LucideIcon } from "lucide-react";
 import Link from "next/link";
-import { Linkedin, Facebook, Instagram } from "lucide-react";
+import { Instagram } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import api from "@/lib/axios";

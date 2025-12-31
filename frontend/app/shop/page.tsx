@@ -5,15 +5,7 @@ import ProductCard from "@/components/product/ProductCard";
 import { Search, LayoutGrid, LayoutList } from "lucide-react";
 import NavbarDefault from "@/components/layout/NavbarDefault";
 import api from "@/lib/axios";
-
-type Product = {
-    _id: string;
-    name: string;
-    price: number;
-    images?: { url: string }[];
-    slug?: string;
-    category?: string;
-};
+import type { Product } from "@/types/product";
 
 const categories = [
     "All",
