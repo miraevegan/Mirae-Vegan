@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     default: "Miraé Vegan",
     template: "%s | Miraé",
   },
+  icons: {
+    icon: `/logo/Favicon.svg`,
+  },
   description: "Your one-stop shop for all things fashion and lifestyle.",
 };
 
