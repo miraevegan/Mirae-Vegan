@@ -102,7 +102,7 @@ export default function JustLanded({ products }: JustLandedProps) {
       viewport={{ once: true, margin: "-120px" }}
     >
       <motion.div
-        className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between mb-8"
+        className="flex flex-col gap-6 sm:flex-row items-center justify-center sm:justify-between mb-8"
         variants={headerReveal}
       >
         <h2 className="text-3xl sm:text-4xl uppercase font-highlight text-brand-primary">
@@ -111,7 +111,14 @@ export default function JustLanded({ products }: JustLandedProps) {
 
         <Link
           href="/shop"
-          className="inline-flex items-center gap-3 px-5 py-3 text-xs sm:text-sm tracking-widest transition border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-background"
+          className="inline-flex items-center justify-center gap-3
+            px-5 py-3 w-full sm:w-96
+            text-xs sm:text-sm
+            tracking-widest
+            transition
+            border border-brand-primary
+            text-brand-primary
+            hover:bg-brand-primary hover:text-background"
         >
           View All Products
           <MoveRight className="w-5 h-5 stroke-[1.5]" />
@@ -131,12 +138,12 @@ export default function JustLanded({ products }: JustLandedProps) {
             {products.map((product) => (
               <motion.div
                 key={product._id}
-                className="shrink-0 px-2 w-full sm:w-1/2 lg:w-1/3"
+                className="shrink-0 w-full sm:w-1/2 lg:w-1/3"
                 variants={productItem}
               >
                 <ProductCard
                   product={product}
-                  // onAddToCart={() => handleAddToCart(product)}
+                // onAddToCart={() => handleAddToCart(product)}
                 />
               </motion.div>
             ))}

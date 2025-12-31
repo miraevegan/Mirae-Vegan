@@ -66,9 +66,11 @@ export default function BestSeller({ products }: BestSellerProps) {
         px-4
         sm:px-6
         lg:px-10
-        py-14
-        sm:py-16
-        lg:py-20
+        pt-8
+        lg:pt-10
+        pb-14
+        sm:pb-18
+        lg:pb-24
       "
       variants={sectionFade}
       initial="hidden"
@@ -79,7 +81,7 @@ export default function BestSeller({ products }: BestSellerProps) {
       <motion.div
         className="
           flex flex-col gap-6
-          sm:flex-row sm:items-center sm:justify-between
+          sm:flex-row items-center justify-center sm:justify-between
           mb-10
         "
         initial={{ opacity: 0, y: 12 }}
@@ -91,7 +93,7 @@ export default function BestSeller({ products }: BestSellerProps) {
           className="
             uppercase font-highlight text-brand-primary
             text-3xl
-            sm:text-4xl
+            sm:text-4xl w-full
           "
         >
           Best Sellers
@@ -100,8 +102,8 @@ export default function BestSeller({ products }: BestSellerProps) {
         <Link
           href="/shop?filter=best-seller"
           className="
-            inline-flex items-center gap-3
-            px-5 py-3
+            inline-flex items-center justify-center gap-3
+            px-5 py-3 w-full sm:w-96
             text-xs sm:text-sm
             tracking-widest
             transition

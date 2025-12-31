@@ -119,7 +119,12 @@ export default function TestimonialsSection() {
                 </div>
 
                 <motion.div
-                    className="w-full flex space-x-6 overflow-x-auto no-scrollbar"
+                    className="
+                      w-full flex gap-4 sm:gap-6 
+                      overflow-x-auto no-scrollbar
+                      snap-x snap-mandatory
+                      pb-4
+                    "
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
@@ -129,8 +134,15 @@ export default function TestimonialsSection() {
                         return (
                             <motion.div
                                 key={testi._id}
-                                className="shrink-0 w-lg bg-background border border-border p-6 shadow-md rounded-md"
                                 variants={itemVariants}
+                                className="
+                                    snap-start shrink-0
+                                    w-full sm:w-[60%] md:w-[45%] lg:w-[32%] xl:w-[28%]
+                                    bg-background border border-border
+                                    p-5 sm:p-6
+                                    transition-transform duration-300
+                                    hover:-translate-y-1 hover:shadow-lg
+                                "
                             >
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center space-x-4">
@@ -138,13 +150,15 @@ export default function TestimonialsSection() {
                                             {getInitials(testi.userName)}
                                         </div>
 
-                                        <p className="font-semibold text-base text-black">{testi.userName || "Anonymous"}</p>
+                                        <p className="font-semibold text-sm sm:text-base text-black">
+                                            {testi.userName || "Anonymous"}
+                                        </p>
                                     </div>
                                     <Stars rating={testi.rating} />
                                 </div>
 
                                 <p
-                                    className={`mt-4 text-gray-700 text-xs leading-relaxed transition-all duration-300 ease-in-out ${!isExpanded ? "line-clamp-4" : ""
+                                    className={`mt-4 text-gray-700 text-xs sm:text-sm leading-relaxed transition-all duration-300 ${!isExpanded ? "line-clamp-4" : ""
                                         }`}
                                 >
                                     {testi.comment}
@@ -154,10 +168,15 @@ export default function TestimonialsSection() {
                                 {testi.comment.length > 200 && (
                                     <button
                                         onClick={() => toggleExpand(testi._id)}
-                                        className="mt-2 text-sm text-brand-primary font-semibold hover:underline focus:outline-none"
+                                        className="
+                                            mt-2 text-xs sm:text-sm 
+                                            text-brand-primary font-semibold
+                                            hover:underline focus:outline-none
+                                        "
                                     >
                                         {isExpanded ? "Read less" : "Read more"}
                                     </button>
+
                                 )}
                             </motion.div>
                         );

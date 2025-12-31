@@ -2,10 +2,21 @@
 
 import { MoveRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function HeroSection() {
-  const router = useRouter();
+  const scrollToSection = (e: React.MouseEvent) => {
+    // Prevent default anchor behavior
+    e.preventDefault();
+    
+    const target = document.querySelector("#just-landed");
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start", // Aligns top of section to top of viewport
+      });
+    }
+  };
 
   return (
     <section
@@ -72,18 +83,19 @@ export default function HeroSection() {
         </motion.p>
 
         {/* CTA */}
-        <motion.button
-          variants={{
-            hidden: { opacity: 0, y: 16 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 1, ease: "easeOut" },
-            },
-          }}
-          whileHover={{ y: -3, scale: 1.05 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className="
+        <Link href="#just-landed" scroll={true} onClick={scrollToSection}>
+          <motion.button
+            variants={{
+              hidden: { opacity: 0, y: 16 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 1, ease: "easeOut" },
+              },
+            }}
+            whileHover={{ y: -3, scale: 1.05 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="
             inline-flex items-center gap-3
             px-5 py-3
             sm:px-6
@@ -96,11 +108,11 @@ export default function HeroSection() {
             hover:bg-background hover:text-brand-primary
             hover:cursor-pointer
           "
-          onClick={() => router.push("/shop")}
-        >
-          <MoveRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5]" />
-          NEW ARRIVALS IN STORE
-        </motion.button>
+          >
+            <MoveRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5]" />
+            NEW ARRIVALS IN STORE
+          </motion.button>
+        </Link>
       </motion.div>
     </section>
   );
