@@ -13,18 +13,26 @@ import { useAuth } from "@/context/AuthContext";
 
 export type CartItem = {
   productId: string;
+  variantId: string;
   name: string;
   image: string;
   price: number;
+  originalPrice: number;
   quantity: number;
+  stock?: number;
 };
 
 type CartContextType = {
   cart: CartItem[];
   loading: boolean;
-  addToCart: (productId: string, quantity?: number) => Promise<void>;
-  updateQuantity: (productId: string, quantity: number) => Promise<void>;
-  removeFromCart: (productId: string) => Promise<void>;
+  addToCart: (
+    productId: string,
+    quantity?: number,
+    variantId?: string,
+    variantAttributes?: Record<string, string>
+  ) => Promise<void>;
+  updateQuantity: (productId: string, quantity: number, variantId?: string) => Promise<void>;
+  removeFromCart: (productId: string, variantId?: string) => Promise<void>;
   clearCart: () => Promise<void>;
   fetchCart: () => Promise<void>;
 };
@@ -41,7 +49,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const res = await api.get("/cart");
-      setCart(res.data.cart || []);
+      setCart(res.data); // ✅ FIX
     } catch {
       setCart([]);
     } finally {
@@ -50,14 +58,19 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   const addToCart = useCallback(
-    async (productId: string, quantity = 1) => {
+    async (productId: string, quantity = 1, variantId?: string) => {
       if (!user) throw new Error("User not authenticated");
+      if (!variantId) throw new Error("Variant is required");
+
       setLoading(true);
       try {
-        const res = await api.post("/cart", { productId, quantity });
-        setCart(res.data.cart);
-      } catch (error) {
-        console.error("Failed to add to cart", error);
+        const res = await api.post("/cart/add", {
+          productId,
+          variantId,
+          quantity,
+        });
+
+        setCart(res.data); // backend returns array
       } finally {
         setLoading(false);
       }
@@ -65,37 +78,55 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     [user]
   );
 
-  const updateQuantity = useCallback(async (productId: string, quantity: number) => {
-    setLoading(true);
-    try {
-      const res = await api.put(`/cart/${productId}`, { quantity });
-      setCart(res.data.cart);
-    } catch (error) {
-      console.error("Failed to update quantity", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const updateQuantity = useCallback(
+    async (productId: string, quantity: number, variantId?: string) => {
+      if (!variantId) return;
 
-  const removeFromCart = useCallback(async (productId: string) => {
-    setLoading(true);
-    try {
-      const res = await api.delete(`/cart/${productId}`);
-      setCart(res.data.cart);
-    } catch (error) {
-      console.error("Failed to remove from cart", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      setLoading(true);
+      try {
+        const res = await api.put("/cart/update", {
+          productId,
+          variantId,
+          quantity,
+        });
+
+        setCart(res.data);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  const removeFromCart = useCallback(
+    async (productId: string, variantId?: string) => {
+      if (!variantId) return;
+
+      setLoading(true);
+      try {
+        const res = await api.delete(
+          `/cart/remove/${productId}/${variantId}`
+        );
+        setCart(res.data);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   const clearCart = useCallback(async () => {
-    setCart([]);
     if (!user) return;
-    await api.delete("/cart");
+    setLoading(true);
+    try {
+      await api.delete("/cart/clear");
+      setCart([]);
+    } finally {
+      setLoading(false);
+    }
   }, [user]);
 
-  // Fetch cart on login/logout
+  // Fetch cart on user change (login/logout)
   useEffect(() => {
     if (user) {
       fetchCart();
@@ -112,8 +143,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     if (!pending) return;
 
     try {
-      const { productId, quantity } = JSON.parse(pending);
-      addToCart(productId, quantity);
+      const { productId, quantity, variantId } = JSON.parse(pending);
+      addToCart(productId, quantity, variantId);
       localStorage.removeItem("pendingCartItem");
     } catch (err) {
       console.error("Failed to restore pending cart item", err);

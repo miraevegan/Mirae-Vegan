@@ -1,13 +1,13 @@
 "use client";
 
 import NavbarDefault from "@/components/layout/NavbarDefault";
-import ProfileLayout from "@/components/profile/ProfileLayout";
+import ProfileShell from "./ProfileShell";
 
 export default function ProfilePage() {
   return (
     <>
       <NavbarDefault />
-      <ProfileLayout />
+      <ProfileShell />
     </>
   );
 }

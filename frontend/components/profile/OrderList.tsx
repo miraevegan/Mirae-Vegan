@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import axios from "@/lib/axios";
 import Image from "next/image";
-import { useCart } from "@/context/CartContext";
 import type { Order, OrderItem, OrderStatus } from "@/types/order";
 
 /* ---------- Constants ---------- */
@@ -25,7 +24,6 @@ export default function OrdersPage() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { addToCart } = useCart();
 
   useEffect(() => {
     axios
@@ -54,7 +52,7 @@ export default function OrdersPage() {
             <motion.div
               key={order._id}
               layout
-              className="border rounded-xl"
+              className="shadow-md border border-brand-secondary rounded-2xl bg-surface hover:bg-background transition"
             >
               {/* HEADER ROW */}
               <button
@@ -64,9 +62,16 @@ export default function OrdersPage() {
                 <Info label="Order" value={`#${order._id.slice(-6)}`} />
                 <Info
                   label="Date"
-                  value={new Date(order.createdAt).toLocaleDateString()}
+                  value={new Date(order.createdAt).toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
                 />
-                <Info label="Total" value={`₹${order.totalPrice}`} />
+                <Info
+                  label="Total"
+                  value={`₹${order.totalPrice.toLocaleString()}`}
+                />
                 <Status status={order.orderStatus} />
               </button>
 
@@ -80,21 +85,25 @@ export default function OrdersPage() {
                     transition={{ duration: 0.25, ease: "easeOut" }}
                     className="px-5 pb-5 space-y-6"
                   >
-                    <OrderTimeline status={order.orderStatus} />
+                    {order.orderStatus !== "cancelled" && (
+                      <OrderTimeline status={order.orderStatus} />
+                    )}
 
                     <div className="space-y-4">
                       {order.orderItems.map(item => (
-                        <OrderItemRow key={item.product} item={item} />
+                        <OrderItemRow
+                          key={`${item.product}-${item.variant?.id ?? "default"}`}
+                          item={item}
+                        />
                       ))}
                     </div>
 
                     {/* ACTIONS */}
                     <div className="flex flex-wrap gap-3 pt-4 border-t">
+                      {/* Reorder: redirect (variant-safe) */}
                       <button
                         onClick={() =>
-                          order.orderItems.forEach(i =>
-                            addToCart(i.product, i.quantity)
-                          )
+                          router.push(`/products/${order.orderItems[0].product}`)
                         }
                         className="px-5 py-2 text-xs tracking-widest uppercase border rounded-lg hover:bg-black hover:text-white transition"
                       >
@@ -109,7 +118,9 @@ export default function OrdersPage() {
                       </button>
 
                       <a
-                        href={`/orders/${order._id}/invoice`}
+                        href={`${process.env.NEXT_PUBLIC_API_URL}/invoice/${order._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="px-5 py-2 text-xs tracking-widest uppercase border rounded-lg hover:bg-black hover:text-white transition"
                       >
                         Invoice
@@ -150,21 +161,44 @@ function Status({ status }: { status: OrderStatus }) {
 }
 
 function OrderItemRow({ item }: { item: OrderItem }) {
+  // Extract product name
+  const productName =
+    typeof item.product === "string"
+      ? item.name || "Unknown Product"
+      : item.product?.name || "Unknown Product";
+
+  // Variant label is a string from backend now
+  const variantLabel = item.variant?.label ?? "";
+
+  const price = typeof item.variant?.price === "number" ? item.variant.price : 
+                typeof item.price === "number" ? item.price : 0;
+  const quantity = typeof item.quantity === "number" ? item.quantity : 0;
+  const total = price * quantity;
+
   return (
     <div className="flex items-center gap-4">
       <Image
-        src={item.image}
-        alt={item.name}
+        src={item.image || "/placeholder.png"}
+        alt={variantLabel || productName}
         width={56}
         height={72}
         className="object-cover rounded-md"
       />
+
       <div className="flex-1">
-        <p className="text-sm font-medium">{item.name}</p>
-        <p className="text-xs text-muted">Qty {item.quantity}</p>
+        <p className="text-sm font-medium">{productName}</p>
+
+        {variantLabel && (
+          <p className="text-xs text-muted">{variantLabel}</p>
+        )}
+
+        <p className="text-xs text-muted">
+          Qty {quantity}
+        </p>
       </div>
+
       <p className="text-sm font-medium">
-        ₹{item.price * item.quantity}
+        ₹{total.toLocaleString()}
       </p>
     </div>
   );
@@ -180,16 +214,15 @@ function OrderTimeline({ status }: { status: OrderStatus }) {
     "delivered",
   ];
 
-  const currentIndex = steps.indexOf(status);
+  const currentIndex = Math.max(0, steps.indexOf(status));
 
   return (
     <div className="flex items-center gap-3 pt-2">
       {steps.map((step, i) => (
         <div key={step} className="flex items-center gap-2">
           <span
-            className={`w-2.5 h-2.5 rounded-full ${
-              i <= currentIndex ? "bg-black" : "bg-border"
-            }`}
+            className={`w-2.5 h-2.5 rounded-full ${i <= currentIndex ? "bg-black" : "bg-border"
+              }`}
           />
           {i < steps.length - 1 && (
             <span className="w-8 h-px bg-border" />

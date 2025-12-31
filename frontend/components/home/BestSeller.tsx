@@ -5,24 +5,7 @@ import { MoveRight } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
 import FeaturedBestSellerCard from "@/components/product/FeaturedProductCard";
 import { motion, type Variants } from "framer-motion";
-
-/* ---------------------------
-   Types
----------------------------- */
-
-type ProductImage = {
-  url: string;
-  public_id?: string;
-};
-
-type Product = {
-  _id: string;
-  name: string;
-  price: number;
-  images?: ProductImage[];
-  slug?: string;
-  isBestSeller?: boolean;
-};
+import type { Product } from "@/types/product";
 
 type BestSellerProps = {
   products: Product[];

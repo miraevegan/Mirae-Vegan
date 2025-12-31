@@ -1,17 +1,32 @@
-//app.js
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 
 const app = express();
 
-// Middlewares
-app.use(cors({ origin: true, credentials: true }));
-app.use(express.json());
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
+/* ================= RAZORPAY WEBHOOK (RAW BODY) ================= */
 
-// Import Routes
+// ⚠️ MUST be before express.json()
+app.use(
+  "/api/razorpay/webhook",
+  bodyParser.raw({ type: "application/json" })
+);
+
+/* ================= GLOBAL MIDDLEWARE ================= */
+
+app.use(express.json()); // for all non-webhook routes
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
+
+/* ================= ROUTES ================= */
+
+import razorpayRoutes from "./src/routes/razorpay.routes.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import productRoutes from "./src/routes/product.routes.js";
 import orderRoutes from "./src/routes/order.routes.js";
@@ -21,9 +36,10 @@ import wishlistRoutes from "./src/routes/wishlist.routes.js";
 import cartRoutes from "./src/routes/cart.routes.js";
 import adminUserRoutes from "./src/routes/adminUser.routes.js";
 import paymentRoutes from "./src/routes/payment.routes.js";
-// import testRoutes from "./src/routes/test.routes.js";
+import invoiceRoutes from "./src/routes/invoice.routes.js";
+import newsletterRoutes from "./src/routes/newsletter.routes.js";
 
-// Register routes
+app.use("/api/razorpay", razorpayRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminUserRoutes);
 app.use("/api/products", productRoutes);
@@ -33,13 +49,16 @@ app.use("/api/coupons", couponRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/invoice", invoiceRoutes);
+app.use("/api/newsletter", newsletterRoutes);
 
-// Test route
-// app.use("/api/test", testRoutes);
+/* ================= HEALTH CHECK ================= */
 
-// Health check route
 app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "OK", message: "API is healthy" });
+  res.status(200).json({
+    status: "OK",
+    message: "API is healthy",
+  });
 });
 
 export default app;

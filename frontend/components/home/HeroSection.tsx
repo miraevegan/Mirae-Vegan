@@ -2,8 +2,11 @@
 
 import { MoveRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
+  const router = useRouter();
+
   return (
     <section
       className="flex items-center justify-center w-full min-h-[80vh] sm:min-h-[90vh] bg-center bg-cover px-4"
@@ -78,7 +81,7 @@ export default function HeroSection() {
               transition: { duration: 1, ease: "easeOut" },
             },
           }}
-          whileHover={{ x: 4 }}
+          whileHover={{ y: -3, scale: 1.05 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="
             inline-flex items-center gap-3
@@ -91,7 +94,9 @@ export default function HeroSection() {
             border border-background
             text-background
             hover:bg-background hover:text-brand-primary
+            hover:cursor-pointer
           "
+          onClick={() => router.push("/shop")}
         >
           <MoveRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5]" />
           NEW ARRIVALS IN STORE

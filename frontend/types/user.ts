@@ -1,4 +1,4 @@
-export type Address = {
+export interface Address {
   _id: string;
   fullName: string;
   phone: string;
@@ -8,13 +8,13 @@ export type Address = {
   state: string;
   pincode: string;
   isDefault: boolean;
-};
+}
 
-export type User = {
+export interface User {
   _id: string;
   name: string;
   email: string;
   role: "user" | "admin";
   phone?: string;
   addresses: Address[];
-};
+}

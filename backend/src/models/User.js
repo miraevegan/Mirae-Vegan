@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+/**
+ * ===============================
+ * ADDRESS SCHEMA
+ * ===============================
+ */
 const addressSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true },
@@ -14,25 +19,56 @@ const addressSchema = new mongoose.Schema(
   { _id: true }
 );
 
+/**
+ * ===============================
+ * CART ITEM SCHEMA (UPDATED)
+ * ===============================
+ */
 const cartItemSchema = new mongoose.Schema(
   {
-    productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-    quantity: { type: Number, default: 1 },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+
+    variantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true, // refers to Product.variants._id
+    },
+
+    quantity: {
+      type: Number,
+      default: 1,
+      min: 1,
+    },
   },
   { _id: false }
 );
 
+/**
+ * ===============================
+ * USER SCHEMA
+ * ===============================
+ */
 const userSchema = new mongoose.Schema(
   {
     /* ================= BASIC INFO ================= */
     name: { type: String, required: true },
+
     email: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
     },
-    password: { type: String, required: true, select: false },
+
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
+
     phone: { type: String },
 
     /* ================= AUTH ================= */
@@ -51,6 +87,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
+
     emailVerificationExpires: {
       type: Date,
       select: false,
@@ -60,6 +97,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
+
     resetPasswordExpires: {
       type: Date,
       select: false,
@@ -67,7 +105,21 @@ const userSchema = new mongoose.Schema(
 
     /* ================= USER DATA ================= */
     addresses: [addressSchema],
-    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+
+    wishlist: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        variantId: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+        },
+      },
+    ],
+
     cart: [cartItemSchema],
   },
   { timestamps: true }

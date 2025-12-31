@@ -26,3 +26,31 @@ export async function sendOrderEmail(to, subject, templateName, variables) {
     throw error;
   }
 }
+
+/* ================= NEWSLETTER EMAIL (SERVICE) ================= */
+
+export async function sendNewsletterEmail({ to, subject, htmlContent }) {
+  try {
+    if (!to?.length || !subject || !htmlContent) {
+      throw new Error("Missing newsletter email parameters");
+    }
+
+    const emailPayload = {
+      sender: {
+        email: process.env.BREVO_SENDER_EMAIL,
+        name: "Miraé Vegan",
+      },
+      to, // [{ email }]
+      subject,
+      htmlContent,
+    };
+
+    await brevoClient.sendTransacEmail(emailPayload);
+  } catch (error) {
+    console.error(
+      "Brevo newsletter error:",
+      error.response?.body || error.message
+    );
+    throw error;
+  }
+}

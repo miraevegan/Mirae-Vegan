@@ -7,6 +7,8 @@ import {
   markOrderPaid,
   updateOrderStatus,
   createOrderFromCart,
+  cancelOrder,
+  hasPurchasedProduct,
 } from "../controllers/order.controller.js";
 
 import { protect } from "../middleware/auth.middleware.js";
@@ -14,13 +16,18 @@ import { adminOnly } from "../middleware/admin.middleware.js";
 
 const router = express.Router();
 
-// User
-router.post("/", protect, createOrder);
-router.get("/my", protect, getMyOrders);
-router.get("/:id", protect, getOrderById);
-router.post("/from-cart", protect, createOrderFromCart);
+/* ================= USER ================= */
 
-// Admin
+// 🔹 IMPORTANT: specific routes first
+router.get("/has-purchased/:productId", protect, hasPurchasedProduct);
+
+router.post("/from-cart", protect, createOrderFromCart);
+router.get("/my", protect, getMyOrders);
+router.put("/:id/cancel", protect, cancelOrder);
+router.get("/:id", protect, getOrderById);
+
+/* ================= ADMIN ================= */
+
 router.get("/", protect, adminOnly, getAllOrders);
 router.put("/:id/pay", protect, adminOnly, markOrderPaid);
 router.put("/:id/status", protect, adminOnly, updateOrderStatus);

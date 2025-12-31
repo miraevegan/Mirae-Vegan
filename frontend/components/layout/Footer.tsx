@@ -4,8 +4,47 @@ import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { Linkedin, Facebook, Instagram } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import api from "@/lib/axios";
+import axios from "axios";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
+
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      setMessage({ type: "error", text: "Please enter a valid email." });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setMessage(null);
+
+      // API call to subscribe user
+      const res = await api.post("/newsletter/subscribe", { email });
+
+      setMessage({ type: "success", text: res.data.message || "Subscribed successfully!" });
+      setEmail(""); // clear input
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        // Now error is typed as AxiosError
+        setMessage({
+          type: "error",
+          text: error.response?.data?.message || "Subscription failed. Try again.",
+        });
+      } else {
+        setMessage({ type: "error", text: "Subscription failed. Try again." });
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <footer className="relative px-6 sm:px-10 pt-16 pb-8 bg-brand-primary">
       <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
@@ -43,10 +82,10 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-sm text-background">
             <li><Link href="/contact-us">Contact Us</Link></li>
-            <li><Link href="https://wa.me/XXXXXXXXXX">WhatsApp</Link></li>
-            <li><Link href="#">Facebook</Link></li>
-            <li><Link href="#">Instagram</Link></li>
-            <li><Link href="#">Telegram</Link></li>
+            <li><Link href="https://wa.me/919360696158">WhatsApp</Link></li>
+            {/* <li><Link href="#">Facebook</Link></li> */}
+            <li><Link href="https://www.instagram.com/mirae.lifestyle" target="_blank">Instagram</Link></li>
+            {/* <li><Link href="#">Telegram</Link></li> */}
           </ul>
         </div>
 
@@ -59,23 +98,40 @@ export default function Footer() {
             Updates, exclusive offers & early access.
           </p>
 
-          <div className="flex flex-col gap-3 mt-5">
+          <form onSubmit={handleSubscribe} className="flex flex-col gap-3 mt-5">
             <input
               type="email"
               placeholder="Enter your email"
               className="w-full px-5 py-3 text-sm bg-transparent border outline-none border-background focus:bg-background/80 focus:text-brand-primary"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+              required
             />
 
-            <button className="w-full px-6 py-3 text-sm tracking-widest transition cursor-pointer text-brand-primary bg-background hover:opacity-90">
-              Subscribe
+            <button
+              type="submit"
+              className="w-full px-6 py-3 text-sm tracking-widest transition cursor-pointer text-brand-primary bg-background hover:opacity-90 disabled:opacity-50"
+              disabled={loading}
+            >
+              {loading ? "Subscribing..." : "Subscribe"}
             </button>
-          </div>
+
+            {message && (
+              <p
+                className={`mt-2 text-sm ${message.type === "success" ? "text-green-600" : "text-red-600"
+                  }`}
+              >
+                {message.text}
+              </p>
+            )}
+          </form>
 
           {/* Social Buttons */}
           <div className="grid grid-cols-3 gap-3 mt-6">
-            <SocialButton icon={Linkedin} label="LinkedIn" />
-            <SocialButton icon={Facebook} label="Facebook" />
-            <SocialButton icon={Instagram} label="Instagram" />
+            {/* <SocialButton icon={Linkedin} label="LinkedIn" href={""} /> */}
+            {/* <SocialButton icon={Facebook} label="Facebook" href={""} /> */}
+            <SocialButton icon={Instagram} label="Instagram" href={"https://www.instagram.com/mirae.lifestyle"} />
           </div>
         </div>
       </div>
@@ -105,13 +161,18 @@ export default function Footer() {
 function SocialButton({
   icon: Icon,
   label,
+  href,
 }: {
   icon: LucideIcon;
   label: string;
+  href: string;
 }) {
   return (
     <Link
-      href="#"
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
       className="flex items-center justify-center gap-1 px-3 py-3 text-xs transition border border-background text-background hover:bg-background hover:text-brand-primary"
     >
       <Icon className="w-4 h-4" />

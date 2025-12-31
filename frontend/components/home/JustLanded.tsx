@@ -10,32 +10,40 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
 
-/* ---------------------------
-   Types
----------------------------- */
-
 type ProductImage = {
   url: string;
   public_id?: string;
+};
+
+type Variant = {
+  _id: string;
+  name?: string;
+  price: number;
+  stock: number;
+  sku?: string;
+};
+
+type Discount = {
+  percentage: number;
+  discountedPrice: number;
 };
 
 type Product = {
   _id: string;
   name: string;
   price: number;
+  discountedPrice: number;
   images?: ProductImage[];
   slug?: string;
   isJustLanded?: boolean;
   isBestSeller?: boolean;
+  variants?: Variant[];
+  discount: Discount;
 };
 
 type JustLandedProps = {
   products: Product[];
 };
-
-/* ---------------------------
-   Motion variants (aligned with BestSeller)
----------------------------- */
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
@@ -75,20 +83,12 @@ const productItem: Variants = {
   },
 };
 
-/* ---------------------------
-   Component
----------------------------- */
-
 export default function JustLanded({ products }: JustLandedProps) {
   const [page, setPage] = useState(0);
   const { showToast } = useToast();
   const { addToCart } = useCart();
   const { user } = useAuth();
   const router = useRouter();
-
-  /* ---------------------------
-     Responsive items per view
-  ---------------------------- */
 
   const itemsPerView = useMemo(() => {
     if (typeof window === "undefined") return 3;
@@ -102,10 +102,6 @@ export default function JustLanded({ products }: JustLandedProps) {
 
   const next = () => page < maxPage && setPage((p) => p + 1);
   const prev = () => page > 0 && setPage((p) => p - 1);
-
-  /* ---------------------------
-     Add to cart with auth guard
-  ---------------------------- */
 
   const handleAddToCart = async (product: Product) => {
     if (!user) {
@@ -129,23 +125,14 @@ export default function JustLanded({ products }: JustLandedProps) {
   return (
     <motion.section
       id="just-landed"
-      className="
-        mx-auto
-        px-4 sm:px-6 lg:px-10
-        py-14 sm:py-16
-      "
+      className="mx-auto px-4 sm:px-6 lg:px-10 py-14 sm:py-16"
       variants={sectionFade}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-120px" }}
     >
-      {/* Header */}
       <motion.div
-        className="
-          flex flex-col gap-6
-          sm:flex-row sm:items-center sm:justify-between
-          mb-8
-        "
+        className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between mb-8"
         variants={headerReveal}
       >
         <h2 className="text-3xl sm:text-4xl uppercase font-highlight text-brand-primary">
@@ -154,30 +141,18 @@ export default function JustLanded({ products }: JustLandedProps) {
 
         <Link
           href="/shop"
-          className="
-            inline-flex items-center gap-3
-            px-5 py-3
-            text-xs sm:text-sm
-            tracking-widest
-            transition
-            border border-brand-primary
-            text-brand-primary
-            hover:bg-brand-primary hover:text-background
-          "
+          className="inline-flex items-center gap-3 px-5 py-3 text-xs sm:text-sm tracking-widest transition border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-background"
         >
           View All Products
           <MoveRight className="w-5 h-5 stroke-[1.5]" />
         </Link>
       </motion.div>
 
-      {/* Slider */}
       <div className="relative">
         <div className="overflow-hidden">
           <motion.div
             className="flex"
-            style={{
-              transform: `translateX(-${page * 100}%)`,
-            }}
+            style={{ transform: `translateX(-${page * 100}%)` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
             variants={sliderContainer}
             initial="hidden"
@@ -186,12 +161,7 @@ export default function JustLanded({ products }: JustLandedProps) {
             {products.map((product) => (
               <motion.div
                 key={product._id}
-                className="
-                  shrink-0 px-2
-                  w-full
-                  sm:w-1/2
-                  lg:w-1/3
-                "
+                className="shrink-0 px-2 w-full sm:w-1/2 lg:w-1/3"
                 variants={productItem}
               >
                 <ProductCard
@@ -203,21 +173,13 @@ export default function JustLanded({ products }: JustLandedProps) {
           </motion.div>
         </div>
 
-        {/* Arrows */}
         {page > 0 && (
           <motion.button
             onClick={prev}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="
-              absolute left-0 top-1/2 z-20
-              -translate-x-1/2 -translate-y-1/2
-              h-24 w-10
-              bg-border/90 hover:bg-border
-              shadow-xl
-              hidden sm:flex items-center justify-center
-            "
+            className="absolute left-0 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 h-24 w-10 bg-border/90 hover:bg-border shadow-xl hidden sm:flex items-center justify-center"
             aria-label="Previous products"
           >
             <ChevronLeft />
@@ -230,14 +192,7 @@ export default function JustLanded({ products }: JustLandedProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="
-              absolute right-0 top-1/2 z-20
-              translate-x-1/2 -translate-y-1/2
-              h-24 w-10
-              bg-border/90 hover:bg-border
-              shadow-xl
-              hidden sm:flex items-center justify-center
-            "
+            className="absolute right-0 top-1/2 z-20 translate-x-1/2 -translate-y-1/2 h-24 w-10 bg-border/90 hover:bg-border shadow-xl hidden sm:flex items-center justify-center"
             aria-label="Next products"
           >
             <ChevronRight />

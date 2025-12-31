@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import {
-  Search,
   Heart,
   User,
   ShoppingBag,
@@ -16,19 +15,24 @@ import {
 import { useRouter } from "next/navigation";
 
 import CartDrawer from "@/components/cart/CartDrawer";
+import WishlistDrawer from "../wishlist/WishlistDrawer";
+import { useWishlist } from "@/context/WishlistContext";
 
 export default function NavbarDefault() {
   const { user, loading, logout } = useAuth();
   const { cart } = useCart();
+  const { wishlist } = useWishlist();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [wishlistOpen, setWishlistOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const wishlistCount = wishlist.length;
 
   /* Close profile dropdown */
   useEffect(() => {
@@ -50,7 +54,7 @@ export default function NavbarDefault() {
           {/* LEFT LINKS – Desktop Only */}
           <div className="hidden lg:flex items-center gap-6 text-xs tracking-widest uppercase">
             <Link className="hover:opacity-60" href="#just-landed">Just Landed</Link>
-            <Link className="hover:opacity-60" href="/products">Shop</Link>
+            <Link className="hover:opacity-60" href="/shop">Shop</Link>
             <Link className="hover:opacity-60" href="/about-us">About Us</Link>
           </div>
 
@@ -73,9 +77,26 @@ export default function NavbarDefault() {
 
           {/* RIGHT ICONS */}
           <div className="relative flex items-center gap-6">
+            {/* WISHLIST */}
+            <button
+              onClick={() => {
+                if (!user) {
+                  router.push("/login");
+                  return;
+                }
+                setWishlistOpen(true); // <-- open wishlist drawer
+              }}
+              className="relative"
+              aria-label="Open wishlist"
+            >
+              <Heart className="w-5 h-5 stroke-[1.75px]" />
 
-            {/* <Search className="w-4.5 h-4.5 cursor-pointer hover:opacity-60" /> */}
-            <Heart className="w-4.5 h-4.5 cursor-pointer hover:opacity-60" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-2 -right-2 min-w-4.5 h-4.5 px-1 text-[10px] flex items-center justify-center bg-black text-white rounded-full">
+                  {wishlistCount}
+                </span>
+              )}
+            </button>
 
             {/* CART */}
             <button
@@ -92,7 +113,7 @@ export default function NavbarDefault() {
             </button>
 
             {/* PROFILE */}
-            <button onClick={() => setOpen(v => !v)}>
+            <button onClick={() => setOpen(v => !v)} className="hidden lg:block">
               <User className="w-4.5 h-4.5 hover:opacity-60" />
             </button>
 
@@ -108,19 +129,10 @@ export default function NavbarDefault() {
                       Guest User
                     </p>
 
-                    <Link
-                      href="/login"
-                      onClick={() => setOpen(false)}
-                      className="block w-full px-4 py-2 mb-2 text-xs tracking-widest text-center transition border border-black hover:bg-black hover:text-white"
-                    >
+                    <Link href="/login" onClick={() => setOpen(false)} className="block px-4 py-2 text-sm text-center border hover:border-border text-background bg-brand-primary hover:bg-brand-primary/80 hover:text-background">
                       Login
                     </Link>
-
-                    <Link
-                      href="/register"
-                      onClick={() => setOpen(false)}
-                      className="block w-full px-4 py-2 text-xs tracking-widest text-center transition border border-border hover:bg-surface"
-                    >
+                    <Link href="/register" onClick={() => setOpen(false)} className="block mt-2 px-4 py-2 text-sm text-center border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-background">
                       Register
                     </Link>
                   </>
@@ -152,22 +164,71 @@ export default function NavbarDefault() {
         </div>
 
         {/* MOBILE NAV MENU */}
-        {mobileMenu && (
-          <div className="fixed inset-0 z-50 bg-background text-text-primary">
-            <div className="flex items-center justify-between p-6 border-b border-border">
-              <span className="text-2xl font-brand">Miraé</span>
-              <button onClick={() => setMobileMenu(false)}>
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+        <div
+          className={`
+              fixed inset-0 z-50 bg-background text-brand-primary
+              transition-all duration-300 ease-in-out
+              ${mobileMenu
+              ? "translate-x-0 opacity-100 pointer-events-auto"
+              : "-translate-x-full opacity-0 pointer-events-none"}
+            `}
+          >
+          <div className="flex items-center justify-between p-6 border-b border-border">
+            <span className="text-2xl font-brand">Miraé</span>
+            <button onClick={() => setMobileMenu(false)}>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
-            <div className="flex flex-col items-center gap-8 mt-20 text-sm tracking-widest uppercase">
-              <Link href="#just-landed" onClick={() => setMobileMenu(false)}>Just Landed</Link>
-              <Link href="/products" onClick={() => setMobileMenu(false)}>Shop</Link>
-              <Link href="/about-us" onClick={() => setMobileMenu(false)}>About Us</Link>
+          <div className="flex flex-col items-center gap-8 mt-20 text-sm tracking-widest uppercase">
+            <Link href="#just-landed" onClick={() => setMobileMenu(false)}>Just Landed</Link>
+            <Link href="/products" onClick={() => setMobileMenu(false)}>Shop</Link>
+            <Link href="/about-us" onClick={() => setMobileMenu(false)}>About Us</Link>
+            <div className="mt-16 flex flex-col text-xl items-center gap-6">
+              {user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileMenu(false)}
+                    className="flex items-center gap-3"
+                  >
+                    <User className="w-5 h-5" />
+                    Profile
+                  </Link>
+
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileMenu(false)}
+                    className="flex items-center gap-3"
+                  >
+                    Orders
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenu(false);
+                      router.push("/login");
+                    }}
+                    className="flex items-center gap-3 text-red-500"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" onClick={() => setMobileMenu(false)}>
+                    Login
+                  </Link>
+                  <Link href="/register" onClick={() => setMobileMenu(false)}>
+                    Register
+                  </Link>
+                </>
+              )}
             </div>
           </div>
-        )}
+        </div>
       </nav>
 
       {/* CART DRAWER */}
@@ -175,6 +236,8 @@ export default function NavbarDefault() {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
       />
+
+      <WishlistDrawer isOpen={wishlistOpen} onClose={() => setWishlistOpen(false)} /> {/* <-- Render WishlistDrawer */}
     </>
   );
 }

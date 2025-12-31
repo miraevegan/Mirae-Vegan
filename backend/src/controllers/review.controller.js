@@ -17,8 +17,9 @@ export const addReview = async (req, res) => {
         // 2️⃣ Check if user has purchased this product
         const hasPurchased = await Order.findOne({
             user: req.user._id,
-            "orderItems.product": new mongoose.Types.ObjectId(productId),
-            isDelivered: true,
+            "orderItems.product": productId,
+            orderStatus: "delivered",
+            paymentStatus: "paid",
         });
 
         if (!hasPurchased) {
@@ -177,4 +178,38 @@ export const deleteReview = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+};
+
+export const getTestimonials = async (req, res) => {
+    try {
+        // Fetch only those marked as testimonials and with rating >= 4 (optional filter)
+        const testimonials = await Review.find({ testimonial: true, rating: { $gte: 4 } })
+            .sort({ createdAt: -1 })
+            .limit(10); // You can adjust the limit
+
+        res.json({ success: true, testimonials });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// In review.controller.js
+
+export const updateReviewTestimonial = async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const { testimonial } = req.body;
+
+    const review = await Review.findById(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    review.testimonial = testimonial;
+    await review.save();
+
+    res.json({ success: true, message: "Testimonial status updated", review });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };

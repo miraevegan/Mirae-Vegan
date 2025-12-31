@@ -6,6 +6,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext"; // Add CartProvider import
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { WishlistProvider } from "@/context/WishlistContext";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -40,9 +41,11 @@ export default function RootLayout({
         <ToastProvider>
           <AuthProvider>
             <CartProvider>
-              <Navbar />
-              <main>{children}</main>
-              <Footer />
+              <WishlistProvider>
+                <Navbar />
+                <main>{children}</main>
+                <Footer />
+              </WishlistProvider>
             </CartProvider>
           </AuthProvider>
         </ToastProvider>

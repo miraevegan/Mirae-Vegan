@@ -7,9 +7,28 @@ const orderItemSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     },
-    name: String,
-    price: Number,
-    quantity: Number,
+
+    variant: {
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+      },
+      label: {
+        type: String,
+        required: true, // e.g. "500g / Black"
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+    },
+
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+
     image: String,
   },
   { _id: false }
@@ -23,7 +42,10 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
-    orderItems: [orderItemSchema],
+    orderItems: {
+      type: [orderItemSchema],
+      required: true,
+    },
 
     shippingAddress: {
       fullName: String,
@@ -43,8 +65,20 @@ const orderSchema = new mongoose.Schema(
 
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed"],
-      default: "pending",
+      enum: ["created", "pending", "paid", "failed", "refunded"],
+      default: "created",
+    },
+
+    paymentResult: {
+      razorpayOrderId: String,
+      razorpayPaymentId: String,
+      razorpaySignature: String,
+      status: String,
+    },
+
+    razorpayOrderId: {
+      type: String,
+      index: true,
     },
 
     orderStatus: {
@@ -61,15 +95,39 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
     },
 
-    itemsPrice: Number,
-    taxPrice: { type: Number, default: 0 },
-    shippingPrice: { type: Number, default: 0 },
-    totalPrice: Number,
+    itemsPrice: {
+      type: Number,
+      required: true,
+    },
 
-    isPaid: { type: Boolean, default: false },
+    taxPrice: {
+      type: Number,
+      default: 0,
+    },
+
+    shippingPrice: {
+      type: Number,
+      default: 0,
+    },
+
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+
+    coupon: {
+      code: { type: String },
+      discountType: { type: String },
+      discountValue: { type: Number },
+      discountAmount: { type: Number },
+    },
+
+    discountPrice: {
+      type: Number,
+      default: 0,
+    },
+
     paidAt: Date,
-
-    isDelivered: { type: Boolean, default: false },
     deliveredAt: Date,
   },
   { timestamps: true }

@@ -7,11 +7,14 @@ import {
   updateProduct,
   deleteProduct,
   deleteProductImage,
+  getVariantAvailability,
   bestSellers,
   justLanded,
+  addVariantImages,
+  deleteVariantImage,
 } from "../controllers/product.controller.js";
 
-import upload from "../utils/multer.js";
+import { productUpload } from "../utils/multer.js";
 import { protect } from "../middleware/auth.middleware.js";
 import { adminOnly } from "../middleware/admin.middleware.js";
 
@@ -19,50 +22,90 @@ const router = express.Router();
 
 /**
  * ===============================
- * USER ROUTES
+ * PUBLIC / USER ROUTES
  * ===============================
+ * No auth required
  */
-router.get("/", getAllProducts);
+
+// 🔹 Collections / Home sections
 router.get("/best-sellers", bestSellers);
 router.get("/just-landed", justLanded);
+
+// 🔹 Product listing (filters, pagination, sorting)
+router.get("/", getAllProducts);
+
+// 🔹 Variant availability (size / color stock)
+router.get("/:slug/availability", getVariantAvailability);
+
+// 🔹 Single product (by slug)
+// ⚠️ MUST BE LAST among GET routes
 router.get("/:slug", getSingleProduct);
 
 /**
  * ===============================
  * ADMIN ROUTES
  * ===============================
+ * Auth + Admin required
  */
+
+// ✅ CREATE PRODUCT
 router.post(
   "/",
   protect,
   adminOnly,
-  upload.array("images", 5),
+  productUpload,
   createProduct
 );
 
-router.put(
-  "/:id/images",
-  protect,
-  adminOnly,
-  upload.array("images", 5),
-  addProductImages
-);
-
+// ✅ UPDATE PRODUCT (details + variants + optional images)
 router.put(
   "/:id",
   protect,
   adminOnly,
-  upload.array("images", 5),
+  productUpload,
   updateProduct
 );
 
-router.delete("/:id", protect, adminOnly, deleteProduct);
+// ✅ ADD PRODUCT IMAGES ONLY
+router.put(
+  "/:id/images",
+  protect,
+  adminOnly,
+  productUpload,
+  addProductImages
+);
 
+// Add variant images to a specific variant
+router.put(
+  "/:productId/variants/:variantId/images",
+  protect,
+  adminOnly,
+  productUpload,
+  addVariantImages
+);
+
+// Delete a variant image by publicId
+router.delete(
+  "/:productId/variants/:variantId/images/:publicId",
+  protect,
+  adminOnly,
+  deleteVariantImage
+);
+
+// ✅ DELETE SINGLE PRODUCT IMAGE
 router.delete(
   "/:id/images/:publicId",
   protect,
   adminOnly,
   deleteProductImage
+);
+
+// ✅ DELETE PRODUCT (hard delete)
+router.delete(
+  "/:id",
+  protect,
+  adminOnly,
+  deleteProduct
 );
 
 export default router;

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>You’ve Unsubscribed</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; color: #333; padding: 20px; }
+    .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; }
+    h1 { color: #d32f2f; }
+    a { color: #4caf50; text-decoration: none; }
+    p { line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>We're Sorry to See You Go</h1>
+    <p>Hello {{userName}},</p>
+    <p>You've successfully unsubscribed from the Miraé Vegan newsletter.</p>
+    <p>If this was a mistake, or you change your mind, you can <a href="{{subscribeLink}}">subscribe again here</a>.</p>
+    <p>Thank you for being with us.</p>
+    <p>Best wishes,<br />The Miraé Vegan Team</p>
+  </div>
+</body>
+</html>
