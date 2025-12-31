@@ -174,7 +174,7 @@ export default function ProductCard({ product }: { product: Product }) {
           type="button"
           disabled={isOutOfStock}
           onClick={handleAddToCart}
-          className={`absolute z-10 flex items-center gap-2 px-4 py-2 text-xs text-white bottom-3 right-3 transition
+          className={`absolute z-10 flex items-center gap-2 px-4 py-2 text-xs hover:cursor-pointer text-white bottom-3 right-3 transition
             ${
               isOutOfStock
                 ? "bg-gray-400 cursor-not-allowed"
