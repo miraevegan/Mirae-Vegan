@@ -34,16 +34,30 @@ const headerReveal: Variants = {
 export default function JustLanded({ products }: JustLandedProps) {
   const [page, setPage] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [itemsPerView, setItemsPerView] = useState(3);
 
-  /* ✅ SSR-safe screen detection */
+  /* ✅ SSR-safe responsive logic */
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 640);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    const handleResize = () => {
+      const width = window.innerWidth;
+
+      if (width < 640) {
+        setIsMobile(true);
+        setItemsPerView(1);
+      } else if (width < 1024) {
+        setIsMobile(false);
+        setItemsPerView(2);
+      } else {
+        setIsMobile(false);
+        setItemsPerView(3);
+      }
+    };
+
+    handleResize(); // initial
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const itemsPerView = isMobile ? 1 : window.innerWidth < 1024 ? 2 : 3;
   const totalPages = Math.ceil(products.length / itemsPerView);
   const maxPage = Math.max(totalPages - 1, 0);
 
@@ -76,17 +90,9 @@ export default function JustLanded({ products }: JustLandedProps) {
 
       {/* Slider */}
       <div className="relative">
-        <div
-          className={
-            isMobile
-              ? "overflow-x-auto no-scrollbar"
-              : "overflow-hidden"
-          }
-        >
+        <div className={isMobile ? "overflow-x-auto no-scrollbar" : "overflow-hidden"}>
           <motion.div
-            className={`flex ${
-              isMobile ? "snap-x snap-mandatory" : ""
-            }`}
+            className={`flex ${isMobile ? "snap-x snap-mandatory" : ""}`}
             style={
               isMobile
                 ? undefined
@@ -99,7 +105,9 @@ export default function JustLanded({ products }: JustLandedProps) {
                 key={product._id}
                 className={`
                   shrink-0 px-2
-                  ${isMobile ? "w-[85%] snap-start" : "w-full sm:w-1/2 lg:w-1/3"}
+                  ${isMobile
+                    ? "w-[85%] snap-start"
+                    : "w-full sm:w-1/2 lg:w-1/3"}
                 `}
               >
                 <ProductCard product={product} />
@@ -108,7 +116,7 @@ export default function JustLanded({ products }: JustLandedProps) {
           </motion.div>
         </div>
 
-        {/* Desktop arrows only */}
+        {/* Desktop arrows */}
         {!isMobile && page > 0 && (
           <button
             onClick={() => setPage((p) => p - 1)}
