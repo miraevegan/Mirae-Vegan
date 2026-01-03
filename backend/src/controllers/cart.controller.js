@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Product from "../models/Product.js";
 import mongoose from "mongoose";
+import { syncAbandonedCart } from "../utils/syncAbandonedCart.js";
 
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
@@ -55,6 +56,10 @@ export const addToCart = async (req, res) => {
     }
 
     await user.save();
+
+    // Sync abandoned cart
+    await syncAbandonedCart(user);
+
     res.json(user.cart);
   } catch (error) {
     console.error("ADD TO CART ERROR:", error);
@@ -129,7 +134,43 @@ export const removeFromCart = async (req, res) => {
     );
 
     await user.save();
-    res.json(user.cart);
+
+    // 🔥 RE-FETCH POPULATED CART
+    const populatedUser = await User.findById(req.user._id)
+      .populate({
+        path: "cart.productId",
+        select: "name slug images variants discount",
+      })
+      .lean();
+
+    const cart = populatedUser.cart.map((item) => {
+      const variant = item.productId.variants.find(
+        (v) => v._id.toString() === item.variantId.toString()
+      );
+
+      const basePrice = variant?.price ?? 0;
+      const discount = item.productId.discount?.percentage ?? 0;
+
+      const finalPrice =
+        discount > 0
+          ? Math.round(basePrice - (basePrice * discount) / 100)
+          : basePrice;
+
+      return {
+        productId: item.productId._id,
+        variantId: item.variantId,
+        name: item.productId.name,
+        slug: item.productId.slug,
+        image: variant?.images?.[0]?.url || item.productId.images[0]?.url,
+        price: finalPrice,
+        originalPrice: basePrice,
+        discount,
+        quantity: item.quantity,
+        stock: variant?.stock,
+      };
+    });
+
+    res.json(cart);
   } catch (error) {
     console.error("REMOVE FROM CART ERROR:", error);
     res.status(500).json({ message: "Failed to remove item" });

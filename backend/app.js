@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import { scheduleAbandonedCartJob } from "./src/utils/syncAbandonedCart.js";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(
 
 /* ================= ROUTES ================= */
 
+import heroRoutes from "./src/routes/hero.routes.js";
 import razorpayRoutes from "./src/routes/razorpay.routes.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import productRoutes from "./src/routes/product.routes.js";
@@ -38,7 +40,10 @@ import adminUserRoutes from "./src/routes/adminUser.routes.js";
 import paymentRoutes from "./src/routes/payment.routes.js";
 import invoiceRoutes from "./src/routes/invoice.routes.js";
 import newsletterRoutes from "./src/routes/newsletter.routes.js";
+import abandonedCart from "./src/routes/abandonedCart.routes.js";
 
+scheduleAbandonedCartJob();
+app.use("/api/hero", heroRoutes);
 app.use("/api/razorpay", razorpayRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminUserRoutes);
@@ -51,6 +56,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/invoice", invoiceRoutes);
 app.use("/api/newsletter", newsletterRoutes);
+app.use("/api/abandoned_carts", abandonedCart);
 
 /* ================= HEALTH CHECK ================= */
 

@@ -35,6 +35,7 @@ export const createProduct = async (req, res) => {
       discount,
       isBestSeller,
       isJustLanded,
+      isVegan,
       attributes,
       specifications,
     } = req.body;
@@ -92,6 +93,7 @@ export const createProduct = async (req, res) => {
       discount: discount ? typeof discount === "string" ? JSON.parse(discount) : discount : { percentage: 0 },
       isBestSeller,
       isJustLanded,
+      isVegan,
       attributes: attributes
         ? typeof attributes === "string"
           ? JSON.parse(attributes)
@@ -310,6 +312,7 @@ export const updateProduct = async (req, res) => {
     if (req.body.category !== undefined) product.category = req.body.category;
     if (req.body.isBestSeller !== undefined) product.isBestSeller = req.body.isBestSeller;
     if (req.body.isJustLanded !== undefined) product.isJustLanded = req.body.isJustLanded;
+    if (req.body.isVegan !== undefined) product.isVegan = req.body.isVegan;
 
     /* -------- DISCOUNT (VERY IMPORTANT) -------- */
     if (req.body.discount !== undefined) {
@@ -497,4 +500,13 @@ export const justLanded = async (req, res) => {
     .sort({ createdAt: -1 })
     .limit(12);
   res.json(products);
+};
+
+export const getCategories = async (req, res) => {
+  try {
+    const categories = await Product.distinct("category");
+    res.json({ categories });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch categories" });
+  }
 };

@@ -2,25 +2,36 @@ import multer from "multer";
 
 const storage = multer.memoryStorage();
 
-const fileFilter = (req, file, cb) => {
+/* ---------- PRODUCT UPLOAD (images only) ---------- */
+const productFileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(null, false);
+    cb(new Error("Only image files are allowed"), false);
   }
 };
 
-const upload = multer({
+export const productUpload = multer({
   storage,
-  fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
-  },
-});
+  fileFilter: productFileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 },
+}).array("productImages", 20);
 
-// 👇 THIS IS THE IMPORTANT PART
-export const productUpload = upload.fields([
-  { name: "productImages", maxCount: 20 },
-]);
+/* ---------- HERO UPLOAD (image + video) ---------- */
+const heroFileFilter = (req, file, cb) => {
+  if (
+    file.mimetype.startsWith("image/") ||
+    file.mimetype.startsWithWith?.("video/") || // fallback safety
+    file.mimetype.startsWith("video/")
+  ) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only image or video files are allowed"), false);
+  }
+};
 
-export default upload;
+export const heroUpload = multer({
+  storage,
+  fileFilter: heroFileFilter,
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB for video
+}).array("media", 10);

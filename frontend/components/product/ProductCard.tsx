@@ -57,6 +57,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const tags = [
     product.isJustLanded && "NEW IN",
     product.isBestSeller && "BEST SELLER",
+    product.isVegan && "VEGAN",
   ].filter(Boolean) as string[];
 
   const selectedVariant = inStockVariants[0]; // Default variant for wishlist and add to cart
@@ -121,11 +122,10 @@ export default function ProductCard({ product }: { product: Product }) {
           alt={product.name}
           fill
           sizes="(min-width: 1024px) 33vw, 100vw"
-          className={`object-cover transition duration-500 ${
-            isOutOfStock
-              ? "opacity-60 grayscale"
-              : "group-hover:scale-105"
-          }`}
+          className={`object-cover transition duration-500 ${isOutOfStock
+            ? "opacity-60 grayscale"
+            : "group-hover:scale-105"
+            }`}
         />
 
         {/* Tags */}
@@ -134,9 +134,13 @@ export default function ProductCard({ product }: { product: Product }) {
             {tags.map(tag => (
               <span
                 key={tag}
-                className="px-2 py-1 text-[10px] tracking-widest uppercase text-white bg-black"
+                className={`px-2 py-1 text-[10px] tracking-widest uppercase text-white
+                  ${tag === "VEGAN"
+                    ? "bg-brand-primary"
+                    : "bg-black"
+                  }`}
               >
-                {tag}
+                {tag === "VEGAN" ? "VEGAN" : tag}
               </span>
             ))}
 
@@ -161,11 +165,10 @@ export default function ProductCard({ product }: { product: Product }) {
           className="absolute z-10 p-2 rounded-full top-3 right-3 bg-white/70 hover:bg-white"
         >
           <Heart
-            className={`h-5 w-5 transition ${
-              wishlisted
-                ? "fill-red-500 text-red-500"
-                : "text-gray-700"
-            }`}
+            className={`h-5 w-5 transition ${wishlisted
+              ? "fill-red-500 text-red-500"
+              : "text-gray-700"
+              }`}
           />
         </button>
 
@@ -175,10 +178,9 @@ export default function ProductCard({ product }: { product: Product }) {
           disabled={isOutOfStock}
           onClick={handleAddToCart}
           className={`absolute z-10 flex items-center gap-2 px-4 py-2 text-xs hover:cursor-pointer text-white bottom-3 right-3 transition
-            ${
-              isOutOfStock
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-black opacity-0 group-hover:opacity-100"
+            ${isOutOfStock
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-black opacity-0 group-hover:opacity-100"
             }`}
         >
           <ShoppingBag className="w-4 h-4" />

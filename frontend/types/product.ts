@@ -57,4 +57,5 @@ export interface Product {
 
   isBestSeller?: boolean;
   isJustLanded?: boolean;
+  isVegan?: boolean;
 }

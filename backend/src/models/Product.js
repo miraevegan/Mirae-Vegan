@@ -62,7 +62,7 @@ const productSchema = new mongoose.Schema(
     /* 🔹 NEW: Product-level attributes */
     attributes: {
       type: Object,
-      default: {}, 
+      default: {},
       // e.g. { material: "Cotton", fit: "Regular", sleeve: "Full" }
     },
 
@@ -121,6 +121,11 @@ const productSchema = new mongoose.Schema(
     },
 
     isJustLanded: {
+      type: Boolean,
+      default: false,
+    },
+
+    isVegan: {
       type: Boolean,
       default: false,
     },

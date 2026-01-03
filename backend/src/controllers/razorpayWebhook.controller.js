@@ -2,6 +2,7 @@ import crypto from "crypto";
 import Order from "../models/Order.js";
 import { sendOrderEmail } from "../services/brevoEmail.service.js";
 import { generateInvoiceBuffer } from "../services/invoice.service.js";
+import AbandonedCart from "../models/AbandonedCart.js";
 
 export const razorpayWebhook = async (req, res) => {
   try {
@@ -51,7 +52,14 @@ export const razorpayWebhook = async (req, res) => {
 
       await order.save();
 
-      console.log("✅ Payment marked PAID:", order._id);
+      if (order.user && order.user._id) {
+        await AbandonedCart.findOneAndUpdate(
+          { userId: order.user._id, status: { $ne: "converted" } },
+          { status: "converted", convertedAt: new Date() }
+        );
+      }
+
+      console.log("✅ Payment marked PAID and abandoned cart converted:", order._id);
     }
 
     return res.status(200).json({ success: true });

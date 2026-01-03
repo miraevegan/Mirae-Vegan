@@ -57,6 +57,7 @@ export default function FeaturedBestSellerCard({ product }: { product: Product }
   const tags = [
     product.isJustLanded && "NEW IN",
     product.isBestSeller && "BEST SELLER",
+    product.isVegan && "VEGAN",
   ].filter(Boolean) as string[];
 
   const selectedVariant = inStockVariants[0]; // Default variant for wishlist and add to cart
@@ -119,9 +120,8 @@ export default function FeaturedBestSellerCard({ product }: { product: Product }
           alt={product.name}
           fill
           sizes="(min-width: 1024px) 40vw, 100vw"
-          className={`object-cover transition-transform duration-700 ${
-            isOutOfStock ? "opacity-60 grayscale" : "group-hover:scale-105"
-          }`}
+          className={`object-cover transition-transform duration-700 ${isOutOfStock ? "opacity-60 grayscale" : "group-hover:scale-105"
+            }`}
         />
 
         {/* Tags */}
@@ -130,9 +130,11 @@ export default function FeaturedBestSellerCard({ product }: { product: Product }
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 text-xs tracking-widest text-white uppercase bg-black"
+                className={`px-3 py-1 text-xs tracking-widest uppercase text-white
+                  ${tag === "VEGAN" ? "bg-brand-primary" : "bg-black"}
+                `}
               >
-                {tag}
+                {tag === "VEGAN" ? "VEGAN 🌱" : tag}
               </span>
             ))}
 
@@ -158,9 +160,8 @@ export default function FeaturedBestSellerCard({ product }: { product: Product }
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
-            className={`h-5 w-5 transition ${
-              wishlisted ? "fill-red-500 text-red-500" : "text-gray-700"
-            }`}
+            className={`h-5 w-5 transition ${wishlisted ? "fill-red-500 text-red-500" : "text-gray-700"
+              }`}
           />
         </button>
 
@@ -170,10 +171,9 @@ export default function FeaturedBestSellerCard({ product }: { product: Product }
           disabled={isOutOfStock}
           onClick={handleAddToCart}
           className={`absolute z-10 flex items-center gap-2 px-5 py-2 text-sm text-white bottom-4 right-4 transition
-            ${
-              isOutOfStock
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-black opacity-0 group-hover:opacity-100"
+            ${isOutOfStock
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-black opacity-0 group-hover:opacity-100"
             }`}
           aria-label="Add to cart"
         >

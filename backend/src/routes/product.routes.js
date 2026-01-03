@@ -12,6 +12,7 @@ import {
   justLanded,
   addVariantImages,
   deleteVariantImage,
+  getCategories,
 } from "../controllers/product.controller.js";
 
 import { productUpload } from "../utils/multer.js";
@@ -33,6 +34,9 @@ router.get("/just-landed", justLanded);
 
 // 🔹 Product listing (filters, pagination, sorting)
 router.get("/", getAllProducts);
+
+// 🔹 Categories (distinct)
+router.get("/categories", getCategories);
 
 // 🔹 Variant availability (size / color stock)
 router.get("/:slug/availability", getVariantAvailability);

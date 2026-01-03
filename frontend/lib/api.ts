@@ -29,6 +29,7 @@ function mapBackendProductToFrontend(product: Product) {
     variants: product.variants || [],
     isBestSeller: product.isBestSeller || false,
     isJustLanded: product.isJustLanded || false,
+    isVegan: product.isVegan || false,
   };
 }
 

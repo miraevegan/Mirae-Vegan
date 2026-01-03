@@ -6,19 +6,12 @@ import { Search, LayoutGrid, LayoutList } from "lucide-react";
 import NavbarDefault from "@/components/layout/NavbarDefault";
 import api from "@/lib/axios";
 import type { Product } from "@/types/product";
-
-const categories = [
-    "All",
-    "Footwear",
-    "Apparel",
-    "Accessories",
-    "New In",
-    "Best Sellers",
-];
+import ProductCardSkeleton from "@/components/product/ProductCardSkeleton";
 
 export default function ShopPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [categories, setCategories] = useState<string[]>([]);
 
     const [search, setSearch] = useState("");
     const [activeCategory, setActiveCategory] = useState("All");
@@ -44,7 +37,11 @@ export default function ShopPage() {
                 const res = await api.get(endpoint);
 
                 if (isMounted) {
-                    setProducts(res.data.products || []);
+                    const data = res.data;
+
+                    setProducts(
+                        Array.isArray(data) ? data : data.products ?? []
+                    );
                 }
             } catch (err) {
                 console.error("Failed to fetch products", err);
@@ -61,6 +58,24 @@ export default function ShopPage() {
         };
     }, [activeCategory]);
 
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await api.get("/products/categories");
+                setCategories([
+                    "All",
+                    "New In",
+                    "Best Sellers",
+                    "Vegan",
+                    ...res.data.categories,
+                ]);
+            } catch {
+                setCategories(["All", "New In", "Best Sellers"]);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     // Filter by search on already fetched products
     const filteredProducts = products.filter((product) =>
@@ -106,8 +121,8 @@ export default function ShopPage() {
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
                                 className={`text-xs tracking-widest uppercase transition ${activeCategory === cat
-                                        ? "text-brand-primary border-b border-brand-primary pb-1"
-                                        : "text-text-secondary hover:text-text-primary"
+                                    ? "text-brand-primary border-b border-brand-primary pb-1"
+                                    : "text-text-secondary hover:text-text-primary"
                                     }`}
                             >
                                 {cat}
@@ -140,8 +155,8 @@ export default function ShopPage() {
                 {/* ===== PRODUCTS ===== */}
                 <div
                     className={`grid gap-x-8 gap-y-16 ${columns === 3
-                            ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                            : "grid-cols-1 md:grid-cols-2"
+                        ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                        : "grid-cols-1 md:grid-cols-2"
                         }`}
                 >
                     {filteredProducts.length > 0 ? (
@@ -149,11 +164,27 @@ export default function ShopPage() {
                             <ProductCard key={product._id} product={product} />
                         ))
                     ) : loading ? (
-                        <p className="text-sm text-text-secondary">Loading products…</p>
+                        Array.from({ length: columns === 3 ? 6 : 4 }).map((_, i) => (
+                            <ProductCardSkeleton key={i} />
+                        ))
                     ) : (
-                        <p className="mt-20 text-sm text-center text-text-secondary">
-                            No products found.
-                        </p>
+                        <div className="col-span-full py-24 text-center">
+                            <h3 className="text-lg font-medium text-brand-primary">
+                                No products found
+                            </h3>
+                            <p className="mt-2 text-sm text-text-secondary">
+                                Try a different category or clear your search.
+                            </p>
+                            <button
+                                onClick={() => {
+                                    setSearch("");
+                                    setActiveCategory("All");
+                                }}
+                                className="mt-6 px-6 py-3 text-xs tracking-widest uppercase border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition"
+                            >
+                                View all products
+                            </button>
+                        </div>
                     )}
                 </div>
             </section>
