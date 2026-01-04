@@ -132,7 +132,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     alt={item.name}
                     width={80}
                     height={100}
-                    className="object-cover rounded-sm"
+                    className="object-cover rounded-sm border border-border"
                   />
                 ) : (
                   <div className="flex items-center justify-center w-20 h-25 bg-black/5 text-xs text-black/40">
@@ -202,7 +202,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   onClick={() =>
                     removeFromCart(item.productId, item.variantId)
                   }
-                  className="self-start text-xs text-error hover:text-black transition"
+                  className="self-start text-xs text-error hover:cursor-pointer hover:text-brand-primary transition"
                 >
                   Remove
                 </button>
@@ -214,7 +214,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         <footer className="px-6 py-6 border-t border-black/10 space-y-4">
           <div className="flex justify-between text-sm font-medium text-brand-primary">
             <span>Subtotal</span>
-            <span>₹{total.toFixed(2)}</span>
+            <span className="text-brand-primary font-semibold">₹{total.toFixed(2)}</span>
           </div>
 
           {/* Coupon placeholder (future-ready) */}
@@ -226,10 +226,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             onClick={goToCheckout}
             disabled={cart.length === 0}
             className={`
-              w-full py-3 text-sm font-semibold tracking-wide
+              w-full py-3 text-sm font-medium tracking-wide
               ${cart.length === 0
                 ? "bg-disabled cursor-not-allowed"
-                : "bg-brand-primary text-background hover:bg-brand-primary/90 transition"
+                : "bg-brand-primary hover:cursor-pointer text-background hover:bg-brand-primary/90 transition"
               }
             `}
           >
@@ -239,7 +239,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           <button
             onClick={clearCart}
             disabled={cart.length === 0}
-            className="w-full text-xs text-black/60 hover:text-black transition"
+            className="w-full text-xs text-black/60 hover:text-brand-primary hover:cursor-pointer transition"
           >
             Clear cart
           </button>

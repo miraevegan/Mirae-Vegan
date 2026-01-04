@@ -31,7 +31,7 @@ export default function ContactUsPage() {
               <Store className="w-5 h-5 text-brand-primary mt-1" />
               <div>
                 <p className="text-sm text-text-secondary">Business Name</p>
-                <p className="font-medium">Mirae Vegan</p>
+                <p className="font-medium">Mirae</p>
               </div>
             </div>
 

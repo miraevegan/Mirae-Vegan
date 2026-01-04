@@ -75,7 +75,7 @@ export const subscribe = async (req, res) => {
     }
 
     // Send welcome email
-    await sendOrderEmail(email, "Welcome to Miraé Vegan Newsletter", "newsletter-welcome.html", {
+    await sendOrderEmail(email, "Welcome to Miraé`s Newsletter", "newsletter-welcome.html", {
       userName: userName || "Subscriber",
       unsubscribeLink: `${process.env.BASE_URL}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`,
     });
@@ -127,7 +127,7 @@ export const unsubscribe = async (req, res) => {
           background: #f9f9f9;
         ">
           <h1 style="color:#2f855a;">You’ve been unsubscribed 🌱</h1>
-          <p>You will no longer receive emails from Miraé Vegan.</p>
+          <p>You will no longer receive emails from Miraé.</p>
           <p style="margin-top:20px;">
             Changed your mind?
             <a href="${process.env.FRONTEND_URL || "#"}">Subscribe again</a>

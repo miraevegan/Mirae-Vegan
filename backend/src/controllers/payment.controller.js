@@ -58,11 +58,6 @@ export const createRazorpayOrder = async (req, res) => {
 
     await order.save();
 
-    console.log("[Razorpay Order Created]", {
-      orderId: order._id.toString(),
-      razorpayOrderId: razorpayOrder.id,
-    });
-
     res.json({
       success: true,
       key: process.env.RAZORPAY_KEY_ID,

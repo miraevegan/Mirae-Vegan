@@ -20,8 +20,7 @@ export default function LicensingPage() {
           </h1>
 
           <p className="mt-6 text-lg text-text-secondary max-w-2xl">
-            All creative assets, content, and materials associated with Miraé
-            Vegan are protected and licensed to preserve the integrity of our
+            All creative assets, content, and materials associated with Miraé are protected and licensed to preserve the integrity of our
             brand.
           </p>
         </div>
@@ -37,10 +36,10 @@ export default function LicensingPage() {
               Brand Ownership
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              All content published on the Miraé Vegan website — including but
+              All content published on the Miraé website — including but
               not limited to logos, product designs, imagery, videos, text,
               graphics, and visual compositions — is the exclusive property of
-              Miraé Vegan unless otherwise stated.
+              Miraé unless otherwise stated.
             </p>
           </div>
 
@@ -52,7 +51,7 @@ export default function LicensingPage() {
               Permitted Use
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              You may access and use Miraé Vegan content for personal,
+              You may access and use Miraé content for personal,
               non-commercial purposes only. Any form of reproduction,
               modification, distribution, or public display without written
               permission is strictly prohibited.
@@ -67,10 +66,9 @@ export default function LicensingPage() {
               Commercial Licensing
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              Use of Miraé Vegan assets for commercial purposes — including
+              Use of Miraé assets for commercial purposes — including
               marketing, resale, collaborations, press usage, or third-party
-              promotions — requires prior written authorization from Miraé
-              Vegan.
+              promotions — requires prior written authorization from Miraé.
             </p>
           </div>
 
@@ -82,7 +80,7 @@ export default function LicensingPage() {
               Trademarks
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              Miraé Vegan™, its logo, wordmarks, and associated brand elements
+              Miraé™, its logo, wordmarks, and associated brand elements
               are registered or unregistered trademarks. Unauthorized use may
               result in legal action.
             </p>

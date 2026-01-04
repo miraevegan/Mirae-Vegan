@@ -187,7 +187,7 @@ export default function CheckoutPage() {
         key: paymentRes.data.key,
         amount: paymentRes.data.amount,
         currency: "INR",
-        name: "Miraé Vegan",
+        name: "Miraé",
         order_id: paymentRes.data.razorpayOrderId,
 
         handler: async (response: RazorpaySuccessResponse) => {
@@ -202,7 +202,6 @@ export default function CheckoutPage() {
 
         modal: {
           ondismiss: () => {
-            console.log("❌ Razorpay modal closed");
             setLoading(false);
           },
         },
@@ -363,7 +362,7 @@ export default function CheckoutPage() {
                 <button
                   onClick={applyCoupon}
                   disabled={couponLoading || !!appliedCoupon}
-                  className="px-4 py-2 bg-brand-primary text-background text-xs hover:bg-hover disabled:opacity-50"
+                  className="px-4 py-2 bg-brand-primary hover:cursor-pointer text-background text-xs hover:bg-hover disabled:opacity-50"
                 >
                   {couponLoading ? "Applying…" : "Apply"}
                 </button>

@@ -70,7 +70,7 @@ export default function NavbarDefault() {
           {/* BRAND – unchanged */}
           <Link
             href="/"
-            className="absolute text-3xl font-medium tracking-tight -translate-x-1/2 left-1/2 font-brand"
+            className="absolute text-brand-primary text-3xl font-medium tracking-tight -translate-x-1/2 left-1/2 font-brand"
           >
             Miraé
           </Link>
@@ -89,7 +89,7 @@ export default function NavbarDefault() {
               className="relative"
               aria-label="Open wishlist"
             >
-              <Heart className="w-5 h-5 stroke-[1.75px]" />
+              <Heart className="w-5 h-5 stroke-[1.75px] hover:cursor-pointer hover:opacity-60" />
 
               {wishlistCount > 0 && (
                 <span className="absolute -top-2 -right-2 min-w-4.5 h-4.5 px-1 text-[10px] flex items-center justify-center bg-black text-white rounded-full">
@@ -104,7 +104,7 @@ export default function NavbarDefault() {
               className="relative"
               aria-label="Open cart"
             >
-              <ShoppingBag className="w-4.5 h-4.5 hover:opacity-60" />
+              <ShoppingBag className="w-4.5 h-4.5 hover:opacity-60 hover:cursor-pointer" />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 min-w-4.5 h-4.5 px-1 text-[10px] flex items-center justify-center bg-black text-white rounded-full">
                   {totalItems}
@@ -114,7 +114,7 @@ export default function NavbarDefault() {
 
             {/* PROFILE */}
             <button onClick={() => setOpen(v => !v)} className="hidden lg:block">
-              <User className="w-4.5 h-4.5 hover:opacity-60" />
+              <User className="w-4.5 h-4.5 hover:opacity-60 hover:cursor-pointer" />
             </button>
 
             {/* PROFILE DROPDOWN */}
@@ -182,7 +182,7 @@ export default function NavbarDefault() {
 
           <div className="flex flex-col items-center gap-8 mt-20 text-sm tracking-widest uppercase">
             <Link href="#just-landed" onClick={() => setMobileMenu(false)}>Just Landed</Link>
-            <Link href="/products" onClick={() => setMobileMenu(false)}>Shop</Link>
+            <Link href="/shop" onClick={() => setMobileMenu(false)}>Shop</Link>
             <Link href="/about-us" onClick={() => setMobileMenu(false)}>About Us</Link>
             <div className="mt-16 flex flex-col text-xl items-center gap-6">
               {user ? (

@@ -63,7 +63,7 @@ export default function OrderDetailsPage() {
         key: paymentData.key,
         amount: paymentData.amount,
         currency: "INR",
-        name: "Miraé Vegan",
+        name: "Miraé",
         description: "Complete your payment",
         order_id: paymentData.razorpayOrderId,
         handler: async (response: RazorpaySuccessResponse) => {

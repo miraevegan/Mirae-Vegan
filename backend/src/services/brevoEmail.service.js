@@ -38,7 +38,7 @@ export async function sendNewsletterEmail({ to, subject, htmlContent }) {
     const emailPayload = {
       sender: {
         email: process.env.BREVO_SENDER_EMAIL,
-        name: "Miraé Vegan",
+        name: "Miraé",
       },
       to, // [{ email }]
       subject,

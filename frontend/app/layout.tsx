@@ -7,6 +7,7 @@ import { CartProvider } from "@/context/CartContext"; // Add CartProvider import
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { WishlistProvider } from "@/context/WishlistContext";
+import RouteLoader from "@/components/loaders/RouteLoader";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -22,7 +23,7 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: {
-    default: "Miraé Vegan",
+    default: "Miraé",
     template: "%s | Miraé",
   },
   icons: {
@@ -41,6 +42,7 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${montserrat.variable} font-body bg-surface-canvas text-text-primary`}
       >
+        <RouteLoader />
         <ToastProvider>
           <AuthProvider>
             <CartProvider>

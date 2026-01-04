@@ -26,8 +26,6 @@ export const razorpayWebhook = async (req, res) => {
 
     const event = JSON.parse(req.body.toString());
 
-    console.log("📩 Webhook hit:", event.event);
-
     if (event.event === "payment.captured") {
       const payment = event.payload.payment.entity;
 
@@ -58,8 +56,6 @@ export const razorpayWebhook = async (req, res) => {
           { status: "converted", convertedAt: new Date() }
         );
       }
-
-      console.log("✅ Payment marked PAID and abandoned cart converted:", order._id);
     }
 
     return res.status(200).json({ success: true });

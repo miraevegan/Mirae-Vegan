@@ -106,7 +106,7 @@ export default function Navbar() {
                 }
                 setWishlistOpen(true); // <-- open wishlist drawer
               }}
-              className="relative"
+              className="relative hover:cursor-pointer"
               aria-label="Open wishlist"
             >
               <Heart className="w-5 h-5 stroke-[1.75px]" />
@@ -119,7 +119,7 @@ export default function Navbar() {
             </button>
 
             {/* CART */}
-            <button onClick={() => setCartOpen(true)} className="relative" aria-label="Open cart">
+            <button onClick={() => setCartOpen(true)} className="relative hover:cursor-pointer" aria-label="Open cart">
               <ShoppingBag className="w-5 h-5 stroke-[1.75px]" />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 min-w-4.5 h-4.5 px-1 text-[10px] flex items-center justify-center bg-black text-white rounded-full">

@@ -9,7 +9,7 @@ export default function TermsAndConditionsPage() {
         <header className="mb-10">
           <h1 className="text-3xl font-semibold mb-3">Terms & Conditions</h1>
           <p className="text-sm opacity-70 leading-relaxed">
-            These Terms & Conditions govern your use of the Mirae Vegan website and
+            These Terms & Conditions govern your use of the Miraé website and
             services. By accessing or placing an order, you agree to the terms
             outlined below.
           </p>
@@ -21,7 +21,7 @@ export default function TermsAndConditionsPage() {
           <section>
             <h2 className="text-lg font-medium mb-2">Products & Pricing</h2>
             <p>
-              All products listed on the Mirae Vegan website are subject to
+              All products listed on the Miraé website are subject to
               availability. Prices are displayed in INR and may change without
               prior notice due to promotions, updates, or market conditions.
             </p>
@@ -42,7 +42,7 @@ export default function TermsAndConditionsPage() {
             <h2 className="text-lg font-medium mb-2">Payments</h2>
             <p>
               All payments must be completed through our approved payment
-              gateways. Mirae Vegan does not store your card or payment details.
+              gateways. Miraé does not store your card or payment details.
               Transactions are processed securely by third-party providers.
             </p>
           </section>
@@ -63,7 +63,7 @@ export default function TermsAndConditionsPage() {
             <h2 className="text-lg font-medium mb-2">Intellectual Property</h2>
             <p>
               All website content including logos, images, product designs, text,
-              and branding are the intellectual property of Mirae Vegan. Unauthorized
+              and branding are the intellectual property of Miraé. Unauthorized
               use, reproduction, or distribution is strictly prohibited.
             </p>
           </section>
@@ -72,7 +72,7 @@ export default function TermsAndConditionsPage() {
           <section>
             <h2 className="text-lg font-medium mb-2">Limitation of Liability</h2>
             <p>
-              Mirae Vegan shall not be held liable for indirect, incidental, or
+              Miraé shall not be held liable for indirect, incidental, or
               consequential damages arising from the use of our products or
               website, except as required by applicable law.
             </p>

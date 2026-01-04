@@ -18,7 +18,7 @@ export const generateInvoiceBuffer = async (order) => {
     const money = (n) => `₹${Number(n).toFixed(2)}`;
 
     /* ---------- HEADER ---------- */
-    doc.font("Bold").fontSize(22).text("Miraé Vegan");
+    doc.font("Bold").fontSize(22).text("Miraé");
     doc.font("Regular").fontSize(10).text("Premium Plant-Based Essentials");
 
     doc.moveDown();

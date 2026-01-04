@@ -10,7 +10,7 @@ export default function AboutPage() {
             <div className="relative w-full h-[60vh] flex items-center justify-center bg-[url('/images/hero_image.jpg')] bg-cover bg-center">
                 <div className="backdrop-blur-sm bg-background/50 p-6 text-center max-w-lg mx-auto">
                     <h1 className="text-5xl font-highlight uppercase text-brand-primary">
-                        Miraé Vegan
+                        Miraé
                     </h1>
                     <p className="mt-4 text-base text-text-secondary">
                         Fashion that feels as good as it looks — beautiful, conscious, intentional.
@@ -24,7 +24,7 @@ export default function AboutPage() {
                     Our Story
                 </h2>
                 <p className="text-base text-text-secondary leading-relaxed">
-                    Once imagined as a voice for conscious fashion, Miraé Vegan emerged from the desire to
+                    Once imagined as a voice for conscious fashion, Miraé emerged from the desire to
                     design with purpose. We saw an opportunity to create garments that tell a story —
                     quality, compassion, and design without compromise. Each collection is rooted in
                     intention — from thoughtful silhouettes to the materials we choose.

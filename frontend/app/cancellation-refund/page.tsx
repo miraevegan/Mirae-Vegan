@@ -11,7 +11,7 @@ export default function CancellationRefundPage() {
           Cancellation & Refund Policy
         </h1>
         <p className="text-sm text-text-muted max-w-2xl">
-          We want you to feel confident shopping with Mirae Vegan. Please review
+          We want you to feel confident shopping with Mirae. Please review
           our cancellation and refund guidelines below.
         </p>
       </div>

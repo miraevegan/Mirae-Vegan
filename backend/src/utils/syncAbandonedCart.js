@@ -56,8 +56,6 @@ export const scheduleAbandonedCartJob = () => {
         },
         { $set: { abandonedAt: new Date() } }
       );
-
-      console.log(`[AbandonedCartJob] Marked abandoned: ${result.modifiedCount} carts`);
     } catch (error) {
       console.error("[AbandonedCartJob] Error:", error);
     }

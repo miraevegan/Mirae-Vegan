@@ -24,7 +24,6 @@ export default function ProductDetailsPage() {
     const [activeImage, setActiveImage] = useState(0);
     const [qty, setQty] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
-    const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [displayImages, setDisplayImages] = useState<ProductImage[]>([]);
@@ -35,12 +34,10 @@ export default function ProductDetailsPage() {
 
     useEffect(() => {
         const fetchProduct = async () => {
-            setLoading(true);
             setError(null);
 
             try {
                 const res = await api.get(`/products/${slug}`);
-                console.log("Product", res.data);
 
                 setProduct(res.data);
 
@@ -70,13 +67,11 @@ export default function ProductDetailsPage() {
             } catch (err) {
                 console.error(err);
                 setError("Failed to load product data.");
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchProduct();
-    }, [slug]);
+    }, [slug, user]);
 
     useEffect(() => {
         if (!product || !selectedVariant) return;
@@ -101,7 +96,6 @@ export default function ProductDetailsPage() {
     }, [selectedVariant, product]);
 
 
-    if (loading) return <p className="p-10">Loading...</p>;
     if (error) return <p className="p-10 text-red-600">{error}</p>;
     const variants = product?.variants ?? [];
     if (!product) return <p className="p-10">Product not found</p>;
@@ -209,7 +203,7 @@ export default function ProductDetailsPage() {
                             <button
                                 key={idx}
                                 onClick={() => setActiveImage(idx)}
-                                className={`border rounded-lg p-1 ${idx === activeImage ? "border-black" : "opacity-60"}`}
+                                className={`border rounded-lg p-1 ${idx === activeImage ? "border-brand-primary" : "opacity-60 hover:opacity-100 hover:cursor-pointer"}`}
                                 aria-label={`View image ${idx + 1}`}
                             >
                                 <Image src={img.url} alt={`${product.name} image ${idx + 1}`} width={80} height={100} className="rounded-md" />
@@ -302,10 +296,10 @@ export default function ProductDetailsPage() {
                     <div className="flex items-center gap-4">
                         <span className="text-sm">Quantity</span>
 
-                        <div className="flex items-center border rounded-lg overflow-hidden">
+                        <div className="flex items-center border border-border text-brand-primary rounded-lg overflow-hidden">
                             <button
                                 onClick={() => setQty((q) => Math.max(1, q - 1))}
-                                className="px-3 py-2 hover:bg-gray-100"
+                                className="px-3 py-2 hover:bg-brand-primary hover:text-background hover:cursor-pointer"
                                 disabled={qty <= 1}
                                 aria-label="Decrease quantity"
                             >
@@ -314,7 +308,7 @@ export default function ProductDetailsPage() {
                             <span className="px-4 text-sm" aria-live="polite">{qty}</span>
                             <button
                                 onClick={() => setQty((q) => Math.min(stock, q + 1))}
-                                className="px-3 py-2 hover:bg-gray-100"
+                                className="px-3 py-2 hover:bg-brand-primary hover:text-background hover:cursor-pointer"
                                 disabled={qty >= stock}
                                 aria-label="Increase quantity"
                             >
@@ -328,20 +322,20 @@ export default function ProductDetailsPage() {
                         <button
                             onClick={handleAddToCart}
                             disabled={stock === 0 || actionLoading}
-                            className="flex-1 px-6 py-4 border border-black text-black hover:bg-black hover:text-white transition disabled:opacity-40"
+                            className="flex-1 px-6 hover:cursor-pointer py-4 border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-background hover:border-brand-primary transition disabled:opacity-40"
                         >
                             Add to Cart
                         </button>
                     </div>
 
                     {/* Description */}
-                    <div className="pt-8 border-t space-y-3">
+                    <div className="pt-8 border-t border-border space-y-3">
                         <h3 className="text-sm uppercase tracking-widest">Product Details</h3>
                         <p className="text-sm leading-relaxed opacity-80">{product.description}</p>
                     </div>
                 </div>
                 {/* REVIEWS */}
-                <div className="lg:col-span-2 pt-14 space-y-6">
+                <div className="lg:col-span-2 pt-14 space-y-6 border-t border-border">
                     <h2 className="text-xl font-light">
                         Reviews ({reviews.length})
                     </h2>

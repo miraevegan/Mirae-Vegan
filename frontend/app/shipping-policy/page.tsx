@@ -11,7 +11,7 @@ export default function ShippingPolicyPage() {
             Shipping Policy
           </h1>
           <p className="text-sm text-text-muted max-w-2xl">
-            At Mirae Vegan, we strive to deliver your orders safely, transparently,
+            At Miraé, we strive to deliver your orders safely, transparently,
             and within a reasonable timeframe.
           </p>
         </div>

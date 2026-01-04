@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
           </h1>
 
           <p className="mt-6 text-lg text-text-secondary max-w-2xl">
-            Miraé Vegan is committed to protecting your personal data and
+            Miraé is committed to protecting your personal data and
             maintaining transparency in how your information is used.
           </p>
         </div>
@@ -36,7 +36,7 @@ export default function PrivacyPolicyPage() {
               Information We Collect
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              When you interact with Miraé Vegan, we may collect personal
+              When you interact with Miraé, we may collect personal
               information such as your name, email address, contact details,
               shipping information, and order history. This data helps us
               provide a seamless and personalized shopping experience.
@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
             </h2>
             <p className="text-text-secondary leading-relaxed">
               All payments are handled by secure third-party payment gateways.
-              Miraé Vegan does not store card or UPI details. Industry-standard
+              Miraé does not store card or UPI details. Industry-standard
               security measures are used to safeguard all data.
             </p>
           </div>
