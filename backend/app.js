@@ -20,7 +20,11 @@ app.use(express.json()); // for all non-webhook routes
 app.use(cookieParser());
 app.use(
   cors({
-    origin: true,
+    origin: [
+      "http://localhost:3000",
+      "https://mirae-vegan-admin.vercel.app",
+      "https://www.miraevegan.com/"
+    ],
     credentials: true,
   })
 );
