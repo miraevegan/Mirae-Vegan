@@ -16,8 +16,6 @@ app.use(
 
 /* ================= GLOBAL MIDDLEWARE ================= */
 
-app.use(express.json()); // for all non-webhook routes
-app.use(cookieParser());
 app.use(
   cors({
     origin: [
@@ -28,6 +26,8 @@ app.use(
     credentials: true,
   })
 );
+app.use(express.json()); // for all non-webhook routes
+app.use(cookieParser());
 
 /* ================= ROUTES ================= */
 
