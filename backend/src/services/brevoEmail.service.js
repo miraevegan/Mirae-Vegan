@@ -2,6 +2,30 @@
 import { brevoClient } from "../config/brevo.js";
 import { renderTemplate } from "../utils/email/renderTemplate.js";
 
+/* ================= GENERIC EMAIL (OTP / AUTH) ================= */
+
+export async function sendEmail({ to, subject, html }) {
+  try {
+    const emailPayload = {
+      sender: {
+        email: process.env.BREVO_SENDER_EMAIL,
+        name: "Miraé",
+      },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    };
+
+    await brevoClient.sendTransacEmail(emailPayload);
+  } catch (error) {
+    console.error(
+      "Brevo email error:",
+      error.response?.body || error.message
+    );
+    throw new Error("Email could not be sent");
+  }
+}
+
 /**
  * Send order-related email via Brevo with template rendering
  * @param {string} to - Recipient email

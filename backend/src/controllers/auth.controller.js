@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import { generateToken } from "../utils/generateToken.js";
-import { sendEmail } from "../utils/email/sendEmail.js";
+import { sendEmail } from "../services/brevoEmail.service.js";
 import { generateOTP, hashOTP } from "../utils/otp.js";
 
 export const register = async (req, res) => {
