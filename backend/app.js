@@ -21,7 +21,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://mirae-vegan-admin.vercel.app",
-      "https://www.miraevegan.com/"
+      "https://www.miraevegan.com"
     ],
     credentials: true,
   })
