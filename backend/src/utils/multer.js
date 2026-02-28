@@ -15,7 +15,9 @@ export const productUpload = multer({
   storage,
   fileFilter: productFileFilter,
   limits: { fileSize: 5 * 1024 * 1024 },
-}).array("productImages", 20);
+}).fields([
+  { name: "productImages", maxCount: 20 }
+]);
 
 /* ---------- HERO UPLOAD (image + video) ---------- */
 const heroFileFilter = (req, file, cb) => {
