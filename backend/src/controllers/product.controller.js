@@ -502,6 +502,11 @@ export const justLanded = async (req, res) => {
   res.json(products);
 };
 
+export const veganProducts = async (req, res) => {
+  const products = await Product.find({ isVegan: true }).limit(12);
+  res.json(products);
+}
+
 export const getCategories = async (req, res) => {
   try {
     const categories = await Product.distinct("category");

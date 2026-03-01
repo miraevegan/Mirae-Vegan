@@ -30,6 +30,8 @@ export default function ShopPage() {
                     endpoint = "/products/best-sellers";
                 } else if (activeCategory === "New In") {
                     endpoint = "/products/just-landed";
+                } else if (activeCategory === "Vegan") {
+                    endpoint = "/products/vegan";
                 } else if (activeCategory !== "All") {
                     endpoint = `/products?category=${encodeURIComponent(activeCategory)}`;
                 }
@@ -70,7 +72,7 @@ export default function ShopPage() {
                     ...res.data.categories,
                 ]);
             } catch {
-                setCategories(["All", "New In", "Best Sellers"]);
+                setCategories(["All", "New In", "Best Sellers", "Vegan"]); // fallback categories if API fails
             }
         };
 

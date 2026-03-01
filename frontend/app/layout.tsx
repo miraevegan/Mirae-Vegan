@@ -8,6 +8,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { WishlistProvider } from "@/context/WishlistContext";
 import RouteLoader from "@/components/loaders/RouteLoader";
+import FloatingWhatsapp from "@/components/common/FloatingWhatsapp";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -49,6 +50,7 @@ export default function RootLayout({
               <WishlistProvider>
                 <Navbar />
                 <main>{children}</main>
+                <FloatingWhatsapp />
                 <Footer />
               </WishlistProvider>
             </CartProvider>

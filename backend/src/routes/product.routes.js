@@ -13,6 +13,7 @@ import {
   addVariantImages,
   deleteVariantImage,
   getCategories,
+  veganProducts,
 } from "../controllers/product.controller.js";
 
 import { productUpload } from "../utils/multer.js";
@@ -31,6 +32,7 @@ const router = express.Router();
 // 🔹 Collections / Home sections
 router.get("/best-sellers", bestSellers);
 router.get("/just-landed", justLanded);
+router.get("/vegan", veganProducts);
 
 // 🔹 Product listing (filters, pagination, sorting)
 router.get("/", getAllProducts);

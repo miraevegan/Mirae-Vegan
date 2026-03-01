@@ -117,7 +117,21 @@ export default function BestSeller({ products }: BestSellerProps) {
         </Link>
       </motion.div>
 
-      {/* Layout */}
+      {/* MOBILE / TABLET SLIDER */}
+      <div className="lg:hidden overflow-x-auto no-scrollbar">
+        <div className="flex snap-x snap-mandatory">
+          {products.map((product) => (
+            <div
+              key={product._id}
+              className="w-[90%] px-2 sm:w-1/2 shrink-0 snap-start"
+            >
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* DESKTOP EDITORIAL LAYOUT */}
       <div className="hidden lg:grid lg:grid-cols-2 lg:gap-8 items-stretch">
 
         {/* LEFT - Featured */}
@@ -145,7 +159,6 @@ export default function BestSeller({ products }: BestSellerProps) {
             </motion.div>
           ))}
         </motion.div>
-
       </div>
     </motion.section>
   );

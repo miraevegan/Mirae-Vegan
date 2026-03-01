@@ -57,7 +57,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-background">
             <li><Link href="#just-landed">Just Landed</Link></li>
             <li><Link href="/shop">Shop</Link></li>
-            <li><Link href="/about">About Us</Link></li>
+            <li><Link href="/about-us">About Us</Link></li>
           </ul>
         </div>
 

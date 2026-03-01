@@ -80,8 +80,17 @@ export default function JustLanded({ products }: JustLandedProps) {
         </h2>
 
         <Link
-          href="/shop"
-          className="inline-flex items-center gap-3 px-5 py-3 text-xs sm:text-sm tracking-widest border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-background transition"
+          href="/shop?filter=best-seller"
+          className="
+            inline-flex items-center justify-center gap-3
+            px-5 py-3 w-full sm:w-96
+            text-xs sm:text-sm
+            tracking-widest
+            transition
+            border border-brand-primary
+            text-brand-primary
+            hover:bg-brand-primary hover:text-background
+          "
         >
           View All Products
           <MoveRight className="w-5 h-5 stroke-[1.5]" />
