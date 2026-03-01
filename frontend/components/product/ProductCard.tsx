@@ -32,7 +32,16 @@ function getTotalStock(product: Product) {
   return product.variants?.reduce((sum, v) => sum + v.stock, 0) ?? 0;
 }
 
-export default function ProductCard({ product }: { product: Product }) {
+type ProductCardProps = {
+  product: Product;
+  size?: "default" | "compact";
+};
+
+export default function ProductCard({ 
+  product, 
+  size = "default" 
+}: ProductCardProps) {
+
   const router = useRouter();
   const { addToCart } = useCart();
   const { showToast } = useToast();
@@ -60,7 +69,7 @@ export default function ProductCard({ product }: { product: Product }) {
     product.isVegan && "VEGAN",
   ].filter(Boolean) as string[];
 
-  const selectedVariant = inStockVariants[0]; // Default variant for wishlist and add to cart
+  const selectedVariant = inStockVariants[0];
 
   const wishlisted = selectedVariant
     ? isWishlisted(product._id, selectedVariant._id)
@@ -109,6 +118,8 @@ export default function ProductCard({ product }: { product: Product }) {
     );
   };
 
+  const isCompact = size === "compact";
+
   return (
     <Link
       href={`/products/${product.slug}`}
@@ -116,16 +127,25 @@ export default function ProductCard({ product }: { product: Product }) {
       aria-label={`View details for ${product.name}`}
     >
       {/* Image */}
-      <div className="relative w-full overflow-hidden aspect-square bg-surface">
+      <div
+        className={`
+          relative w-full overflow-hidden bg-surface aspect-square
+        `}
+      >
         <Image
           src={imageSrc}
           alt={product.name}
           fill
           sizes="(min-width: 1024px) 33vw, 100vw"
-          className={`object-cover transition duration-500 ${isOutOfStock
-            ? "opacity-60 grayscale"
-            : "group-hover:scale-105"
-            }`}
+          className={`
+            object-cover transition duration-500
+            ${isOutOfStock
+              ? "opacity-60 grayscale"
+              : isCompact
+              ? "group-hover:scale-102"
+              : "group-hover:scale-105"
+            }
+          `}
         />
 
         {/* Tags */}
@@ -134,24 +154,27 @@ export default function ProductCard({ product }: { product: Product }) {
             {tags.map(tag => (
               <span
                 key={tag}
-                className={`px-2 py-1 text-[10px] tracking-widest uppercase text-white
+                className={`
+                  px-2 py-1 tracking-widest uppercase text-white
+                  ${isCompact ? "text-[9px]" : "text-[10px]"}
                   ${tag === "VEGAN"
                     ? "bg-brand-primary"
                     : "bg-black"
-                  }`}
+                  }
+                `}
               >
-                {tag === "VEGAN" ? "VEGAN" : tag}
+                {tag}
               </span>
             ))}
 
             {isLowStock && (
-              <span className="px-2 py-1 text-[10px] tracking-widest uppercase text-white bg-orange-600">
+              <span className="px-2 py-1 text-[9px] tracking-widest uppercase text-white bg-orange-600">
                 Only 1 left
               </span>
             )}
 
             {isOutOfStock && (
-              <span className="px-2 py-1 text-[10px] tracking-widest uppercase text-white bg-gray-700">
+              <span className="px-2 py-1 text-[9px] tracking-widest uppercase text-white bg-gray-700">
                 Out of stock
               </span>
             )}
@@ -165,10 +188,11 @@ export default function ProductCard({ product }: { product: Product }) {
           className="absolute z-10 p-2 rounded-full top-3 right-3 bg-white/70 hover:bg-white"
         >
           <Heart
-            className={`h-5 w-5 transition ${wishlisted
-              ? "fill-red-500 text-red-500"
-              : "text-gray-700"
-              }`}
+            className={`h-5 w-5 transition ${
+              wishlisted
+                ? "fill-red-500 text-red-500"
+                : "text-gray-700"
+            }`}
           />
         </button>
 
@@ -177,11 +201,14 @@ export default function ProductCard({ product }: { product: Product }) {
           type="button"
           disabled={isOutOfStock}
           onClick={handleAddToCart}
-          className={`absolute z-10 flex items-center gap-2 px-4 py-2 text-xs hover:cursor-pointer text-white bottom-3 right-3 transition
+          className={`
+            absolute z-10 flex items-center gap-2 text-white bottom-3 right-3 transition
+            ${isCompact ? "px-3 py-1 text-[10px]" : "px-4 py-2 text-xs"}
             ${isOutOfStock
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-black opacity-0 group-hover:opacity-100"
-            }`}
+            }
+          `}
         >
           <ShoppingBag className="w-4 h-4" />
           {canDirectAdd ? "Add" : "Select"}
@@ -190,11 +217,21 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {/* Info */}
       <div className="flex items-center justify-between mt-4">
-        <h3 className="text-sm font-medium line-clamp-1">
+        <h3
+          className={`
+            font-medium line-clamp-1
+            ${isCompact ? "text-xs" : "text-sm"}
+          `}
+        >
           {product.name}
         </h3>
 
-        <p className="text-sm font-semibold text-brand-primary">
+        <p
+          className={`
+            font-semibold text-brand-primary
+            ${isCompact ? "text-xs" : "text-sm"}
+          `}
+        >
           {hasDiscount ? (
             <>
               <span className="mr-2 text-gray-400 line-through">

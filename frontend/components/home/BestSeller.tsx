@@ -118,10 +118,11 @@ export default function BestSeller({ products }: BestSellerProps) {
       </motion.div>
 
       {/* Layout */}
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
-        {/* Featured */}
+      <div className="hidden lg:grid lg:grid-cols-2 lg:gap-8 items-stretch">
+
+        {/* LEFT - Featured */}
         <motion.div
-          className="lg:col-span-1"
+          className="h-full"
           variants={featuredReveal}
           initial="hidden"
           whileInView="visible"
@@ -130,13 +131,9 @@ export default function BestSeller({ products }: BestSellerProps) {
           <FeaturedBestSellerCard product={featuredProduct} />
         </motion.div>
 
-        {/* Grid */}
+        {/* RIGHT - Products Grid */}
         <motion.div
-          className="
-            grid grid-cols-1 gap-6
-            sm:grid-cols-2
-            lg:col-span-2
-          "
+          className="grid grid-cols-2 gap-6"
           variants={gridContainer}
           initial="hidden"
           whileInView="visible"
@@ -148,6 +145,7 @@ export default function BestSeller({ products }: BestSellerProps) {
             </motion.div>
           ))}
         </motion.div>
+
       </div>
     </motion.section>
   );

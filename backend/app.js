@@ -20,6 +20,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
+      "http://localhost:3001",
       "https://mirae-vegan-admin.vercel.app",
       "https://www.miraevegan.com"
     ],

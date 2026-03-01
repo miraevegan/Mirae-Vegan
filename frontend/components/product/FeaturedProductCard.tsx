@@ -110,11 +110,11 @@ export default function FeaturedBestSellerCard({ product }: { product: Product }
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="block w-full h-full group"
+      className="flex flex-col w-full h-full group"
       aria-label={`View details for ${product.name}`}
     >
       {/* Image */}
-      <div className="relative w-full overflow-hidden aspect-4/5 bg-surface">
+      <div className="relative w-full flex-1 overflow-hidden bg-surface">
         <Image
           src={imageSrc}
           alt={product.name}
