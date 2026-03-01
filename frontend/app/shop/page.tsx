@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import ProductCard from "@/components/product/ProductCard";
-import { Search, LayoutGrid, LayoutList } from "lucide-react";
+import { Search, LayoutGrid } from "lucide-react";
 import NavbarDefault from "@/components/layout/NavbarDefault";
 import api from "@/lib/axios";
 import type { Product } from "@/types/product";
 import ProductCardSkeleton from "@/components/product/ProductCardSkeleton";
+import { BsGrid3X3Gap } from "react-icons/bs";
 
 export default function ShopPage() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -140,7 +141,7 @@ export default function ShopPage() {
                                 }`}
                             aria-label="2 column layout"
                         >
-                            <LayoutList className="w-4 h-4" />
+                            <LayoutGrid className="w-4 h-4" />
                         </button>
 
                         <button
@@ -149,7 +150,7 @@ export default function ShopPage() {
                                 }`}
                             aria-label="3 column layout"
                         >
-                            <LayoutGrid className="w-4 h-4" />
+                            <BsGrid3X3Gap className="w-4 h-4"/>
                         </button>
                     </div>
                 </div>
