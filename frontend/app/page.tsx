@@ -6,6 +6,8 @@ import ShopBanner from "@/components/home/ShopBanner";
 import TestimonialsSection from "@/components/home/Testimonials";
 import { getJustLandedProducts, getBestSellerProducts } from "@/lib/api";
 
+export const dynamic = "force-dynamic"; // Ensure this page is always server-rendered
+
 export default async function HomePage() {
   const justLandedProducts = await getJustLandedProducts();
   const bestSellerProducts = await getBestSellerProducts();

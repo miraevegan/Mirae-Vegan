@@ -37,8 +37,6 @@ export async function getJustLandedProducts() {
   try {
     const response = await api.get("/products/just-landed");
 
-    console.log("JUST LANDED RESPONSE:", response.data);
-
     return response.data.map(mapBackendProductToFrontend);
   } catch (error) {
     console.error("Failed to fetch just landed products", error);
