@@ -3,6 +3,8 @@ export interface ProductImage {
   public_id: string;
 }
 
+/* ---------------- Variant ---------------- */
+
 export interface VariantAttribute {
   color?: {
     name: string;
@@ -12,7 +14,7 @@ export interface VariantAttribute {
 }
 
 export interface Variant {
-  _id: string;           // Mongo ObjectId string
+  _id: string;
   attributes: VariantAttribute;
   price: number;
   stock: number;
@@ -20,21 +22,29 @@ export interface Variant {
   sku?: string;
 }
 
+/* ---------------- Discount ---------------- */
+
 export interface Discount {
   percentage: number;
 }
 
-export interface Specifications {
+/* ---------------- Product Attributes ---------------- */
+
+export interface ProductAttributes {
   material?: string;
+  fit?: string;
+}
+
+/* ---------------- Specifications ---------------- */
+
+export interface Specifications {
   care?: string;
   origin?: string;
   weight?: string;
   warranty?: string;
 }
 
-export interface ProductAttributes {
-  [key: string]: unknown; // flexible for arbitrary product-level attributes
-}
+/* ---------------- Product ---------------- */
 
 export interface Product {
   _id: string;
@@ -42,15 +52,16 @@ export interface Product {
   slug: string;
   category: string;
   description: string;
-  
+
   images: ProductImage[];
-  variants?: Variant[];  // Array of variants for this product
-  
+
+  variants?: Variant[];
+
   discount: Discount;
 
-  attribute?: ProductAttributes;
+  attributes?: ProductAttributes;
 
-  specification?: Specifications;
+  specifications?: Specifications;
 
   ratings: number;
   numOfReviews: number;

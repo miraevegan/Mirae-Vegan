@@ -39,6 +39,7 @@ export default function ProductDetailsPage() {
             try {
                 const res = await api.get(`/products/${slug}`);
 
+                console.log("Product data:", res.data);
                 setProduct(res.data);
 
                 if (res.data.variants?.length > 0) {
@@ -329,9 +330,37 @@ export default function ProductDetailsPage() {
                     </div>
 
                     {/* Description */}
-                    <div className="pt-8 border-t border-border space-y-3">
-                        <h3 className="text-sm uppercase tracking-widest">Product Details</h3>
-                        <p className="text-sm leading-relaxed opacity-80">{product.description}</p>
+                    <div className="pt-8 border-t border-border space-y-4">
+
+                        <h3 className="text-sm uppercase tracking-widest">
+                            Product Details
+                        </h3>
+
+                        <p className="text-sm leading-relaxed opacity-80">
+                            {product.description}
+                        </p>
+
+                        {product.attributes?.material && (
+                            <p className="text-sm leading-relaxed opacity-80">
+                                <span className="font-medium">Material:</span>{" "}
+                                {product.attributes.material}
+                            </p>
+                        )}
+
+                        {product.attributes?.fit && (
+                            <p className="text-sm leading-relaxed opacity-80">
+                                <span className="font-medium">Fit:</span>{" "}
+                                {product.attributes.fit}
+                            </p>
+                        )}
+
+                        {product.specifications?.care && (
+                            <p className="text-sm leading-relaxed opacity-80">
+                                <span className="font-medium">Care:</span>{" "}
+                                {product.specifications.care}
+                            </p>
+                        )}
+
                     </div>
                 </div>
                 {/* REVIEWS */}
