@@ -37,3 +37,9 @@ export const heroUpload = multer({
   fileFilter: heroFileFilter,
   limits: { fileSize: 50 * 1024 * 1024 }, // 50MB for video
 }).array("media", 10);
+
+export const reviewUpload = multer({
+  storage,
+  fileFilter: productFileFilter,
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).single("reviewImage");

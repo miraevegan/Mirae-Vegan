@@ -1,58 +1,65 @@
+import mongoose from "mongoose";
 import Review from "../models/Review.js";
 import Product from "../models/Product.js";
 import Order from "../models/Order.js";
-import mongoose from "mongoose";
+import cloudinary from "../config/cloudinary.js";
+import { uploadFromBuffer } from "../utils/uploadToCloudinary.js";
 
 export const addReview = async (req, res) => {
     try {
+
         const { rating, comment } = req.body;
         const productId = req.params.productId;
-        const userId = req.user._id;
 
-        // 1️⃣ Check product exists
         const product = await Product.findById(productId);
         if (!product)
             return res.status(404).json({ message: "Product not found" });
 
-        // 2️⃣ Check if user has purchased this product
-        const hasPurchased = await Order.findOne({
-            user: req.user._id,
-            "orderItems.product": productId,
-            orderStatus: "delivered",
-            paymentStatus: "paid",
-        });
+        let uploadedImage = null;
 
-        if (!hasPurchased) {
-            return res.status(403).json({
-                message: "You can review this product only after purchasing it",
-            });
+        if (req.file) {
+            const uploaded = await uploadFromBuffer(req.file.buffer, "reviews");
+
+            uploadedImage = {
+                url: uploaded.secure_url,
+                public_id: uploaded.public_id,
+            };
         }
 
-        // 3️⃣ One review per user per product
         const existingReview = await Review.findOne({
             product: productId,
-            user: userId,
+            user: req.user._id,
         });
 
         if (existingReview) {
             existingReview.rating = rating;
             existingReview.comment = comment;
+
+            if (uploadedImage) {
+                existingReview.image = uploadedImage;
+            }
+
             await existingReview.save();
+
         } else {
+
             await Review.create({
                 product: productId,
-                user: userId,
+                user: req.user._id,
                 userName: req.user.name,
                 rating,
                 comment,
+                image: uploadedImage,
             });
+
         }
 
-        // 4️⃣ Recalculate product rating
+        /* recalc rating */
+
         const reviews = await Review.find({ product: productId });
 
         const totalRating = reviews.reduce(
-            (sum, review) => sum + review.rating,
+            (sum, r) => sum + r.rating,
             0
         );
 
@@ -61,10 +68,8 @@ export const addReview = async (req, res) => {
 
         await product.save();
 
-        res.json({
-            success: true,
-            message: "Review submitted successfully",
-        });
+        res.json({ success: true });
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -154,6 +159,10 @@ export const deleteReview = async (req, res) => {
             return res.status(404).json({ message: "Review not found" });
         }
 
+        if (review.image?.public_id) {
+            await cloudinary.uploader.destroy(review.image.public_id);
+        }
+
         // Remove the review
         await review.deleteOne();
 
@@ -196,20 +205,68 @@ export const getTestimonials = async (req, res) => {
 // In review.controller.js
 
 export const updateReviewTestimonial = async (req, res) => {
-  try {
-    const reviewId = req.params.id;
-    const { testimonial } = req.body;
+    try {
+        const reviewId = req.params.id;
+        const { testimonial } = req.body;
 
-    const review = await Review.findById(reviewId);
-    if (!review) {
-      return res.status(404).json({ message: "Review not found" });
+        const review = await Review.findById(reviewId);
+        if (!review) {
+            return res.status(404).json({ message: "Review not found" });
+        }
+
+        review.testimonial = testimonial;
+        await review.save();
+
+        res.json({ success: true, message: "Testimonial status updated", review });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    review.testimonial = testimonial;
-    await review.save();
+export const submitFeedback = async (req, res) => {
+    try {
 
-    res.json({ success: true, message: "Testimonial status updated", review });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+        const { productId, name, phone, rating, comment } = req.body;
+
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(400).json({ message: "Invalid product id" });
+        }
+
+        const product = await Product.findById(productId);
+
+        if (!product)
+            return res.status(404).json({ message: "Product not found" });
+
+        const numericRating = Number(rating);
+
+        let image = null;
+
+        if (req.file) {
+            const uploaded = await uploadFromBuffer(req.file.buffer, "reviews");
+
+            image = {
+                url: uploaded.secure_url,
+                public_id: uploaded.public_id,
+            };
+        }
+
+        const review = await Review.create({
+            product: productId,
+            userName: name,
+            phone,
+            rating: numericRating,
+            comment,
+            image,
+            source: "manual",
+        });
+
+        res.json({
+            success: true,
+            review,
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
 };

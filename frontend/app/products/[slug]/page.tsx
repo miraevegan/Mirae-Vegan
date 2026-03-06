@@ -379,12 +379,25 @@ export default function ProductDetailsPage() {
                                 key={review._id}
                                 className="border border-border p-5 bg-surface space-y-2"
                             >
-                                <p className="text-sm font-medium">{review.userName}</p>
-                                <p className="text-xs opacity-60">
-                                    {new Date(review.createdAt).toLocaleDateString()}
-                                </p>
-                                <p className="text-sm">⭐ {review.rating}</p>
-                                <p className="text-sm opacity-80">{review.comment}</p>
+                                <div className="flex gap-3">
+                                    {review.image?.url && (
+                                        <Image
+                                            src={review.image.url}
+                                            alt="Customer review"
+                                            width={130}
+                                            height={50}
+                                            className="h-full"
+                                        />
+                                    )}
+                                    <div className="">
+                                        <p className="text-sm font-medium">{review.userName}</p>
+                                        <p className="text-xs opacity-60">
+                                            {new Date(review.createdAt).toLocaleDateString()}
+                                        </p>
+                                        <p className="text-sm">⭐ {review.rating}</p>
+                                        <p className="text-sm opacity-80">{review.comment}</p>
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>

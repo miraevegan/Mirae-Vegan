@@ -4,6 +4,7 @@ import { useState } from "react";
 import api from "@/lib/axios";
 import { useToast } from "@/context/ToastContext";
 import { AxiosError } from "axios";
+import Image from "next/image";
 
 interface Props {
   productId: string;
@@ -15,7 +16,17 @@ export default function ReviewForm({ productId, onSuccess }: Props) {
 
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+
+  const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const handleImageChange = (file: File | null) => {
+    if (!file) return;
+
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,15 +39,26 @@ export default function ReviewForm({ productId, onSuccess }: Props) {
     try {
       setLoading(true);
 
-      await api.post(`/reviews/${productId}`, {
-        rating,
-        comment,
-      });
+      const formData = new FormData();
+
+      formData.append("rating", rating.toString());
+      formData.append("comment", comment);
+
+      if (image) {
+        formData.append("reviewImage", image);
+      }
+
+      await api.post(`/reviews/${productId}`, formData);
 
       showToast("Review submitted ⭐", "success");
+
       setComment("");
       setRating(5);
+      setImage(null);
+      setPreview(null);
+
       onSuccess();
+
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
 
@@ -73,10 +95,8 @@ export default function ReviewForm({ productId, onSuccess }: Props) {
               key={r}
               type="button"
               onClick={() => setRating(r)}
-              className={`text-2xl transition ${
-                r <= rating ? "opacity-100" : "opacity-30"
-              }`}
-              aria-label={`Rate ${r} stars`}
+              className={`text-2xl transition ${r <= rating ? "opacity-100" : "opacity-30"
+                }`}
             >
               ⭐
             </button>
@@ -96,6 +116,31 @@ export default function ReviewForm({ productId, onSuccess }: Props) {
           className="w-full border border-black/20 px-4 py-3 text-sm focus:outline-none focus:border-black resize-none"
           placeholder="What did you like or dislike?"
         />
+      </div>
+
+      {/* 📷 Upload Image */}
+      <div className="space-y-2 flex flex-col">
+        <label className="text-sm font-medium">
+          Upload photo (optional)
+        </label>
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => handleImageChange(e.target.files?.[0] || null)}
+        />
+
+        {preview && (
+          <div className="pt-2">
+            <Image
+              src={preview}
+              alt="Preview"
+              width={120}
+              height={120}
+              className="rounded-lg object-cover"
+            />
+          </div>
+        )}
       </div>
 
       {/* 🚀 Submit */}
