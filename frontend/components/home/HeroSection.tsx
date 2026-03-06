@@ -96,7 +96,7 @@ export default function HeroSection() {
               },
             }}
             className="
-              font-light font-brand text-background leading-none
+              font-normal font-hatton text-background leading-none
               text-[72px] sm:text-[96px] md:text-[120px] lg:text-[140px]
             "
           >
@@ -114,15 +114,15 @@ export default function HeroSection() {
               },
             }}
             className="
-              font-extralight text-background mt-2 mb-20
-              text-lg sm:text-xl md:text-2xl
+              font-extralight text-background mb-20
+              text-lg sm:text-xl md:text-2xl tracking-widest
             "
           >
             Conscious & Timeless
           </motion.p>
 
           {/* CTA */}
-          <Link href="#just-landed">
+          <Link href="/shop">
             <motion.button
               whileHover={{ y: -2, scale: 1.04 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
@@ -131,7 +131,7 @@ export default function HeroSection() {
                 px-6 py-3
                 tracking-widest text-xs sm:text-sm
                 border border-background text-background
-                hover:bg-background hover:text-brand-primary
+                hover:bg-background hover:text-brand-primary cursor-pointer
               "
             >
               <MoveRight className="w-5 h-5 stroke-[1.4]" />
