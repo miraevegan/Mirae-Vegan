@@ -39,7 +39,6 @@ export default function ProductDetailsPage() {
             try {
                 const res = await api.get(`/products/${slug}`);
 
-                console.log("Product data:", res.data);
                 setProduct(res.data);
 
                 if (res.data.variants?.length > 0) {
