@@ -225,7 +225,10 @@ export const updateReviewTestimonial = async (req, res) => {
 
 export const submitFeedback = async (req, res) => {
     try {
-
+        console.log("Feedback route hit");
+        console.log("Body:", req.body);
+        console.log("File:", req.file);
+        
         const { productId, name, phone, rating, comment } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {

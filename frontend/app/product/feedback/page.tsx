@@ -71,10 +71,10 @@ export default function FeedbackPage() {
                 formData.append("reviewImage", image);
             }
 
-            await fetch(`${process.env.NEXT_PUBLIC_HOSTED_API_URL}/reviews/feedback`, {
-                method: "POST",
-                body: formData,
-            });
+await fetch(`${process.env.NEXT_PUBLIC_HOSTED_API_URL}/reviews/feedback`, {
+  method: "POST",
+  body: formData,
+});
 
             setSuccess(true);
 
