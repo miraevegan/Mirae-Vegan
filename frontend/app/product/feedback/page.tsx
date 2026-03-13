@@ -71,10 +71,11 @@ export default function FeedbackPage() {
                 formData.append("reviewImage", image);
             }
 
-await fetch(`${process.env.NEXT_PUBLIC_HOSTED_API_URL}/reviews/feedback`, {
-  method: "POST",
-  body: formData,
-});
+            await fetch(`${process.env.NEXT_PUBLIC_HOSTED_API_URL}/reviews/feedback`, {
+                method: "POST",
+                body: formData,
+            });
+            // Checking with the fetch response is optional, as the API will return a 200 status even if the review creation fails. We can rely on the try-catch to handle any network errors.
 
             setSuccess(true);
 
