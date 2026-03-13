@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Playfair_Display, Montserrat } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next"
 import { ToastProvider } from "@/context/ToastContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext"; // Add CartProvider import
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${montserrat.variable} font-body bg-surface-canvas text-text-primary`}
       >
+        <Analytics />
         <RouteLoader />
         <ToastProvider>
           <AuthProvider>
