@@ -41,10 +41,10 @@ export default function ContactUsPage() {
               <div>
                 <p className="text-sm text-text-secondary">Email</p>
                 <a
-                  href="mailto:support@miraevegan.com"
+                  href="mailto:miraevegan@gmail.com"
                   className="font-medium hover:underline"
                 >
-                  support@miraevegan.com
+                  miraevegan@gmail.com
                 </a>
               </div>
             </div>
@@ -55,7 +55,7 @@ export default function ContactUsPage() {
               <div>
                 <p className="text-sm text-text-secondary">Phone</p>
                 <a
-                  href="tel:+91XXXXXXXXXX"
+                  href="tel:+919360696158"
                   className="font-medium hover:underline"
                 >
                   +91-9360696158
@@ -69,7 +69,7 @@ export default function ContactUsPage() {
               <div>
                 <p className="text-sm text-text-secondary">Business Address</p>
                 <p className="font-medium">
-                  Patna, Bihar, India
+                  1115/2, Sukkravar Pett Street, Coimbatore, Coimbatore, Coimbatore, Tamil Nadu - 641001
                 </p>
               </div>
             </div>
